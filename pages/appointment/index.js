@@ -9,7 +9,7 @@ export default function Appointment() {
     <div className="from-primary to-base-100 bg-gradient-to-r">
       <div className="hero min-h-screen bg-transparent ">
         <div className="hero-content flex-col lg:flex-row-reverse md:px-[10%]">
-          Appointment
+          Appointmentss
         </div>
       </div>
     </div>
