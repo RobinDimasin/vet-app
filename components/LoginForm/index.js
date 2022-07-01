@@ -6,19 +6,19 @@ import Link from "next/link";
 import { useMutation } from "react-query";
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import { BASE_URL } from "constants";
 import { useContext, useState } from "react";
 import AccountContext from "@components/context/Account/AccountContext";
-import { useRouter } from "next/router";
+import Router from "next/router";
+import { getBaseURL } from "utility";
 
-export default function LoginForm() {
-  const router = useRouter();
+export default function LoginForm({ type = "owner" }) {
   const [error, setError] = useState();
   const { account, setAccount } = useContext(AccountContext);
 
-  const login = useMutation((data) => {
-    return axios.post(BASE_URL + `/api/entity/account/login`, {
-      args: [data],
+  const login = useMutation(({ email, password }) => {
+    return axios.post(getBaseURL() + `/api/account/login`, {
+      email,
+      hashed_password: CryptoJS.SHA512(password).toString(),
     });
   });
 
@@ -34,16 +34,15 @@ export default function LoginForm() {
         .required("Required"),
     }),
     onSubmit: async (values, { setFieldError }) => {
-      const response = await login.mutateAsync({
-        email: values.email,
-        hashed_password: CryptoJS.SHA512(values.password).toString(),
-      });
+      setError();
+      const response = await login.mutateAsync(values);
 
       if (response.status === 200) {
         if (response.data.status === "OK") {
           setAccount(response.data.data.account);
-          router.push(BASE_URL);
+          Router.push(Router.query.destination ?? "/");
         } else {
+          console.log(response.data);
           setError(response.data.message);
         }
       } else {
@@ -58,7 +57,10 @@ export default function LoginForm() {
     <Form
       className="card w-96 bg-base-100 shadow-xl"
       formik={formik}
-      title="Login"
+      title={`${(type !== "owner" ? type + " " : "").replace(
+        /(^\w|\s\w)/g,
+        (m) => m.toUpperCase()
+      )}Login`}
       error={error}
       submitButton={
         <button

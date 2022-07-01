@@ -72,67 +72,110 @@ class AccountEntity extends Entity {
       email,
     });
 
-    if (response.status === STATUS.OK && response.data[0]) {
-      const account = response.data[0];
-      const salt = account.salt;
-      const hashed_password_check = CryptoJS.SHA512(
-        hashed_password + salt
-      ).toString();
+    if (response.status === STATUS.OK) {
+      if (response.data[0]) {
+        const account = response.data[0];
+        const salt = account.salt;
+        const hashed_password_check = CryptoJS.SHA512(
+          hashed_password + salt
+        ).toString();
 
-      const asForeignKey = [this.getColumn("id").asForeignKey];
+        const asForeignKey = [this.getColumn("id").asForeignKey];
 
-      if (account.hashed_password === hashed_password_check) {
-        const token = jwt.sign(
-          {
-            [asForeignKey]: account.id,
-            email: account.email,
-            account_type: account.account_type,
-          },
-          process.env.JWT_SECRET
-        );
-
-        await Token.new({ token, [asForeignKey]: account.id });
-
-        let subtypeDetails = {};
-
-        try {
-          const child = Array.from(this.children).find(
-            (child) => child.entityType === account.account_type
-          );
-
-          if (child) {
-            const res = await child.findOne({
+        if (account.hashed_password === hashed_password_check) {
+          const token = jwt.sign(
+            {
               [asForeignKey]: account.id,
-            });
-            if (res.status === STATUS.OK && res.data[0]) {
-              subtypeDetails = res.data[0];
-            }
-          }
-        } catch (e) {}
-
-        return {
-          status: STATUS.OK,
-          data: {
-            token,
-            account: {
-              id: account.id,
               email: account.email,
               account_type: account.account_type,
-              ...subtypeDetails,
             },
-          },
-        };
+            process.env.JWT_SECRET
+          );
+
+          await Token.new({ token, [asForeignKey]: account.id });
+
+          let subtypeDetails = {};
+
+          try {
+            const child = Array.from(this.children).find(
+              (child) => child.entityType === account.account_type
+            );
+
+            if (child) {
+              const res = await child.findOne({
+                [asForeignKey]: account.id,
+              });
+              if (res.status === STATUS.OK && res.data[0]) {
+                subtypeDetails = res.data[0];
+              }
+            }
+          } catch (e) {}
+
+          return {
+            status: STATUS.OK,
+            data: {
+              token,
+              account: {
+                id: account.id,
+                email: account.email,
+                account_type: account.account_type,
+                ...subtypeDetails,
+              },
+            },
+          };
+        } else {
+          return {
+            status: STATUS.NOT_OK,
+            message: "Wrong Email/Password",
+          };
+        }
       } else {
         return {
           status: STATUS.NOT_OK,
-          error: "Wrong Password",
+          message: "Wrong Email/Password",
         };
       }
     } else {
       return {
         status: STATUS.NOT_OK,
-        error: "Something went wrong",
+        message: "Something went wrong",
       };
+    }
+  }
+
+  async getAccountDetails(id) {
+    const response = await this.findOne({
+      id,
+    });
+
+    if (response.status === STATUS.OK && response.data[0]) {
+      const account = response.data[0];
+      let subtypeDetails = {};
+
+      try {
+        const child = Array.from(this.children).find(
+          (child) => child.entityType === account.account_type
+        );
+
+        if (child) {
+          const asForeignKey = [this.getColumn("id").asForeignKey];
+          const res = await child.findOne({
+            [asForeignKey]: account.id,
+          });
+          if (res.status === STATUS.OK && res.data[0]) {
+            subtypeDetails = res.data[0];
+          }
+        }
+      } catch (e) {}
+
+      return {
+        id: account.id,
+        email: account.email,
+        account_type: account.account_type,
+        ...subtypeDetails,
+      };
+    } else {
+      return null;
     }
   }
 

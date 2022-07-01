@@ -17,6 +17,8 @@ const conn = mysql.createConnection({
 
 const queryAsync = util.promisify(conn.query).bind(conn);
 
+console.log(process.env.MYSQL_HOST);
+
 export const executeQuery = async ({ query, values = [] }) => {
   try {
     let q = "";

@@ -1,4 +1,7 @@
 import Entity from "@entity/Entity";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 class TokenEntity extends Entity {
   constructor() {
@@ -50,6 +53,7 @@ class TokenEntity extends Entity {
       try {
         return jwt.verify(token, process.env.JWT_SECRET);
       } catch (e) {
+        console.log(e);
         return null;
       }
     } else {

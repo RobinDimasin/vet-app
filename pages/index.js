@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div className="from-primary to-base-100 bg-gradient-to-r">
       <div className="hero min-h-screen bg-transparent ">
-        <div className="hero-content flex-col lg:flex-row-reverse md:px-[10%]">
+        <div className="hero-content flex-col lg:flex-row-reverse md:px-[5%]">
           <img
             src="/image/dog3.png"
             className="max-w-sm rounded-lg shadow-2xl h-[400px]"

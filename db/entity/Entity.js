@@ -537,7 +537,7 @@ export default class Entity {
       } ${Object.keys(match)
         .map((column) => `${column}=?`)
         .join(" && ")}`,
-      values: [...values, ...Object.values(match)],
+      values: Object.values(match),
     });
   }
 

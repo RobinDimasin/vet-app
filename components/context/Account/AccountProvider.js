@@ -1,4 +1,6 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
+import { getBaseURL } from "utility";
 import AccountContext from "./AccountContext";
 
 export default function AccountProvider({ children }) {
@@ -12,15 +14,25 @@ export default function AccountProvider({ children }) {
     );
   }, []);
 
+  useEffect(() => {
+    if (account) {
+      localStorage.setItem("account", JSON.stringify(account));
+    } else {
+      localStorage.removeItem("account");
+    }
+  }, [account]);
+
   return (
     <AccountContext.Provider
       value={{
         account,
-        setAccount: (account) => {
-          if (localStorage) {
-            localStorage.setItem("account", JSON.stringify(account));
-          }
-          setAccount(account);
+        setAccount,
+        logout: async () => {
+          setAccount(null);
+          return (
+            (await axios.post(getBaseURL() + "/api/account/logout")).status ===
+            200
+          );
         },
       }}
     >

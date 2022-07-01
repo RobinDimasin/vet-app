@@ -9,7 +9,7 @@ const CATEGORY = {
 };
 
 export default function NavigationBar() {
-  const { account, setAccount } = useContext(AccountContext);
+  const { account, setAccount, logout } = useContext(AccountContext);
 
   const categories = useMemo(() => {
     const categories = {
@@ -24,6 +24,7 @@ export default function NavigationBar() {
           {
             key: "appointment",
             label: "Appointment",
+            route: "/appointment",
           },
           {
             key: "reviews",
@@ -49,7 +50,7 @@ export default function NavigationBar() {
             dropdownOnly: true,
             visible: account,
             onClick: () => {
-              setAccount(null);
+              logout();
             },
           },
           {

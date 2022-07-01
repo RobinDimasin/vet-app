@@ -6,25 +6,23 @@ import Form from "@components/Form/Form";
 import { useMutation } from "react-query";
 import axios from "axios";
 import TextInputField from "@components/Form/TextInputField";
-import { BASE_URL } from "constants";
 import CryptoJS from "crypto-js";
-import { useRouter } from "next/router";
+import Router from "next/router";
 import AccountContext from "@components/context/Account/AccountContext";
+import { getBaseURL } from "utility";
 
 export default function RegisterForm() {
-  const router = useRouter();
   const [error, setError] = useState();
   const { setAccount } = useContext(AccountContext);
 
   const register = useMutation((data) => {
-    console.log({ BASE_URL });
-    return axios.post(BASE_URL + `/api/entity/owner/new`, {
+    return axios.post(getBaseURL() + `/api/entity/owner/new`, {
       args: [data],
     });
   });
 
   const login = useMutation((data) => {
-    return axios.post(BASE_URL + `/api/entity/account/login`, {
+    return axios.post(getBaseURL() + `/api/entity/account/login`, {
       args: [data],
     });
   });
@@ -88,7 +86,7 @@ export default function RegisterForm() {
             loginResponse.data.status === "OK"
           ) {
             setAccount(loginResponse.data.data.account);
-            router.push(BASE_URL);
+            Router.push("/");
           }
         } else {
           setError(registerResponse.data.message);
