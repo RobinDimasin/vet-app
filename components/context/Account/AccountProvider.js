@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { getBaseURL } from "utility";
+import { getBaseURL, makeApiPostRequest } from "utility";
 import AccountContext from "./AccountContext";
 
 export default function AccountProvider({ children }) {
@@ -30,8 +30,7 @@ export default function AccountProvider({ children }) {
         logout: async () => {
           setAccount(null);
           return (
-            (await axios.post(getBaseURL() + "/api/account/logout")).status ===
-            200
+            (await makeApiPostRequest("/api/account/logout")).status === 200
           );
         },
       }}

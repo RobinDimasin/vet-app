@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import FormContext from "./FormContext";
+import FormContext from "../FormContext";
 
-export default function TextInputField({
+export default function SelectField({
   id,
-  type = "text",
   label,
   placeholder,
-  className = "input input-bordered input-primary input-sm w-full",
+  required = true,
+  className = "select select-bordered select-sm w-full",
+  options = [],
   ...props
 }) {
   const [error, setError] = useState();
@@ -22,13 +23,27 @@ export default function TextInputField({
     <>
       {formik ? (
         <div>
-          <input
-            type={type}
+          <select
             placeholder={placeholder}
-            className={[className, error ? "input-error" : ""].join(" ")}
+            className={[
+              className,
+              required ? "select-primary" : "",
+              error ? "select-error" : "",
+            ].join(" ")}
             {...props}
             {...formik.getFieldProps(id)}
-          />
+          >
+            <option value="" disabled selected hidden>
+              {placeholder}
+            </option>
+            {options.map((option) => {
+              return (
+                <option key={option.id} value={option.value}>
+                  {option.label}
+                </option>
+              );
+            })}
+          </select>
           {error || label ? (
             <>
               <label className="label py-0 space-y-0">

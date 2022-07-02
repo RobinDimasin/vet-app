@@ -1,5 +1,5 @@
 import Form from "@components/Form/Form";
-import TextInputField from "@components/Form/TextInputField";
+import TextInputField from "@components/Form/Field/TextInputField";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import Link from "next/link";
@@ -9,14 +9,14 @@ import CryptoJS from "crypto-js";
 import { useContext, useState } from "react";
 import AccountContext from "@components/context/Account/AccountContext";
 import Router from "next/router";
-import { getBaseURL } from "utility";
+import { getBaseURL, makeApiPostRequest } from "utility";
 
 export default function LoginForm({ type = "owner" }) {
   const [error, setError] = useState();
   const { account, setAccount } = useContext(AccountContext);
 
   const login = useMutation(({ email, password }) => {
-    return axios.post(getBaseURL() + `/api/account/login`, {
+    return makeApiPostRequest("/api/account/login", {
       email,
       hashed_password: CryptoJS.SHA512(password).toString(),
     });

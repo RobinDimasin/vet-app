@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useContext, useEffect, useMemo, useState } from "react";
 
 const CATEGORY = {
+  ACCOUNT: "ACCOUNT",
   NAVIGATION: "NAVIGATION",
   AUTHENTICATION: "AUTHENTICATION",
 };
@@ -11,8 +12,85 @@ const CATEGORY = {
 export default function NavigationBar() {
   const { account, setAccount, logout } = useContext(AccountContext);
 
-  const categories = useMemo(() => {
-    const categories = {
+  const { topMenu, dropdownMenu } = useMemo(() => {
+    const topMenu = {
+      [CATEGORY.NAVIGATION]: {
+        label: "Navigation",
+        routes: [
+          {
+            key: "home",
+            label: "Home",
+            route: "/",
+          },
+          {
+            key: "appointment",
+            label: "Appointment",
+            route: "/appointment",
+          },
+          {
+            key: "reviews",
+            label: "Reviews",
+          },
+          {
+            key: "faq",
+            label: "FAQ",
+          },
+          {
+            key: "contact",
+            label: "Contact Us",
+          },
+        ],
+      },
+      [CATEGORY.AUTHENTICATION]: {
+        label: "Authentication",
+        routes: [
+          {
+            key: "register",
+            label: "Register",
+            route: "/register",
+            visible: !account,
+          },
+          {
+            key: "Login",
+            label: "Login",
+            route: "/login",
+            visible: !account,
+            render: ({ key, label, route }) => {
+              return (
+                <Link href={route} key={key}>
+                  <a className="btn btn-primary">{label}</a>
+                </Link>
+              );
+            },
+          },
+        ],
+      },
+    };
+
+    for (const [key, category] of Object.entries(topMenu)) {
+      category.routes = category.routes.filter(({ visible = true }) => visible);
+
+      if (category.routes.length === 0) {
+        delete topMenu[key];
+      }
+    }
+
+    const dropdownMenu = {
+      [CATEGORY.ACCOUNT]: {
+        label: "Account",
+        routes: [
+          {
+            key: "pets",
+            label: "Pets",
+            route: "/pets",
+          },
+          {
+            key: "appointment",
+            label: "Appointments",
+            route: "/appointments",
+          },
+        ],
+      },
       [CATEGORY.NAVIGATION]: {
         label: "Navigation",
         routes: [
@@ -64,9 +142,9 @@ export default function NavigationBar() {
             label: "Login",
             route: "/login",
             visible: !account,
-            render: ({ label, route }) => {
+            render: ({ key, label, route }) => {
               return (
-                <Link href={route}>
+                <Link href={route} key={key}>
                   <a className="btn btn-primary">{label}</a>
                 </Link>
               );
@@ -76,16 +154,16 @@ export default function NavigationBar() {
       },
     };
 
-    for (const [key, category] of Object.entries(categories)) {
+    for (const [key, category] of Object.entries(dropdownMenu)) {
       category.routes = category.routes.filter(({ visible = true }) => visible);
 
       if (category.routes.length === 0) {
-        delete categories[key];
+        delete dropdownMenu[key];
       }
     }
 
-    return categories;
-  }, [account, setAccount]);
+    return { topMenu, dropdownMenu };
+  }, [account, logout]);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -118,8 +196,8 @@ export default function NavigationBar() {
           </a>
         </Link>
         <ul className="menu menu-horizontal p-0 hidden lg:flex space-x-1">
-          {categories[CATEGORY.NAVIGATION]
-            ? categories[CATEGORY.NAVIGATION].routes
+          {topMenu[CATEGORY.NAVIGATION]
+            ? topMenu[CATEGORY.NAVIGATION].routes
                 .filter(({ dropdownOnly = false }) => !dropdownOnly)
                 .map(
                   ({
@@ -150,8 +228,8 @@ export default function NavigationBar() {
       </div>
 
       <div className="navbar-end invisible md:visible space-x-1">
-        {categories[CATEGORY.AUTHENTICATION]
-          ? categories[CATEGORY.AUTHENTICATION].routes
+        {topMenu[CATEGORY.AUTHENTICATION]
+          ? topMenu[CATEGORY.AUTHENTICATION].routes
               .filter(({ dropdownOnly = false }) => !dropdownOnly)
               .map(({ key, label, route = "", render, onClick = () => {} }) => {
                 return render ? (
@@ -213,7 +291,7 @@ export default function NavigationBar() {
             tabIndex="0"
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
-            {Object.entries(categories).map(([key, category], idx, arr) => {
+            {Object.entries(dropdownMenu).map(([key, category], idx, arr) => {
               return (
                 <>
                   {category.routes.map(

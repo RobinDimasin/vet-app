@@ -13,15 +13,8 @@ export default async function handler(req, res) {
     if (func && func in EntityList[entity].functions) {
       const { args } = req.body;
 
-      if (args) {
-        const fun = EntityList[entity].functions[func];
-        res.status(200).json(await fun(...args));
-      } else {
-        res.status(400).json({
-          status: STATUS.NOT_OK,
-          message: `"args" not found in query`,
-        });
-      }
+      const fun = EntityList[entity].functions[func];
+      res.status(200).json(await fun(...(args ?? [])));
     } else {
       res.status(400).json({
         status: STATUS.NOT_OK,

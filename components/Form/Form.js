@@ -24,7 +24,7 @@ export default function Form({
             </div>
           ) : null}
           {submitButton}
-          <div className="divider"></div>
+          {footer ? <div className="divider"></div> : null}
           {footer}
         </div>
       </form>
