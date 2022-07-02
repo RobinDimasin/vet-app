@@ -5,24 +5,24 @@ import { useContext, useEffect, useState } from "react";
 import Form from "@components/Form/Form";
 import { useMutation } from "react-query";
 import axios from "axios";
-import TextInputField from "@components/Form/TextInputField";
+import TextInputField from "@components/Form/Field/TextInputField";
 import CryptoJS from "crypto-js";
 import Router from "next/router";
 import AccountContext from "@components/context/Account/AccountContext";
-import { getBaseURL } from "utility";
+import { getBaseURL, makeApiPostRequest } from "utility";
 
 export default function RegisterForm() {
   const [error, setError] = useState();
   const { setAccount } = useContext(AccountContext);
 
   const register = useMutation((data) => {
-    return axios.post(getBaseURL() + `/api/entity/owner/new`, {
+    return makeApiPostRequest(`/api/entity/owner/new`, {
       args: [data],
     });
   });
 
   const login = useMutation((data) => {
-    return axios.post(getBaseURL() + `/api/entity/account/login`, {
+    return makeApiPostRequest(`/api/entity/account/login`, {
       args: [data],
     });
   });
@@ -127,7 +127,7 @@ export default function RegisterForm() {
         <TextInputField
           id="middle_name"
           placeholder="Middle Name"
-          className="input input-bordered input-sm w-full max-w-xs"
+          required={false}
         />
       </div>
       <TextInputField id="address" placeholder="Address" />

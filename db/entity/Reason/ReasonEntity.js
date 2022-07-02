@@ -5,13 +5,18 @@ class ReasonEntity extends Entity {
     super("Reasons", {
       primaryKey: "id",
       columns: {
-        id: Entity.Column.UUID,
-        reason_of_appt: {
+        id: {
+          type: "VarChar(8)",
+          attributes: "NOT NULL",
+        },
+        reason: {
           type: "VarChar(64)",
           attributes: "NOT NULL",
         },
       },
     });
+
+    this.addFunction("getAll", async () => await this.find({}));
   }
 }
 

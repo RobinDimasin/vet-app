@@ -1,26 +1,15 @@
-import AppointmentForm from "@components/AppointmentForm";
 import useAccount from "@components/hooks/useAccount";
+import PetForm from "@components/PetForm";
+import PetList from "@components/PetList";
 import { useEffect, useState } from "react";
 import { makeApiPostRequest } from "utility";
 
 export default function Appointment() {
   const { account, loading } = useAccount({ type: "owner" });
-
-  const [pets, setPets] = useState();
-  const [reasons, setReasons] = useState();
+  const [pets, setPets] = useState([]);
 
   useEffect(() => {
-    makeApiPostRequest("/api/entity/reason/getAll")
-      .then((response) => {
-        if (response.status === 200 && response.data.status === "OK") {
-          setReasons(response.data.data);
-        }
-      })
-      .catch(() => setReasons([]));
-  }, []);
-
-  useEffect(() => {
-    if (account && account.account_type === "owner" && account.id) {
+    if (account && account.id) {
       makeApiPostRequest("/api/account/owner/getPets", {
         id: account.id,
       })
@@ -29,15 +18,15 @@ export default function Appointment() {
             setPets(response.data.data);
           }
         })
-        .catch(() => setPets([]));
+        .catch(() => {});
     }
   }, [account]);
 
   return (
     <div className="from-primary to-base-100 bg-gradient-to-r">
-      <div className="hero min-h-screen bg-transparent ">
+      <div className="hero min-h-screen bg-transparent">
         <div className="hero-content flex-col lg:flex-row-reverse md:px-[10%]">
-          {loading || !reasons || !pets ? (
+          {loading ? (
             <div
               className="radial-progress animate-spin"
               style={{
@@ -45,7 +34,7 @@ export default function Appointment() {
               }}
             ></div>
           ) : (
-            <AppointmentForm pets={pets} reasons={reasons} />
+            <PetList pets={pets} />
           )}
         </div>
       </div>

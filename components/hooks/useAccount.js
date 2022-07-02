@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { getBaseURL } from "utility";
+import { getBaseURL, makeApiPostRequest } from "utility";
 import { useRouter } from "next/router";
 import AccountContext from "@components/context/Account/AccountContext";
 
@@ -20,8 +20,7 @@ export default function useAccount({ type = "owner" } = {}) {
     setLoading(true);
 
     if (type) {
-      axios
-        .post(getBaseURL() + "/api/account/getAccountDetails", {})
+      makeApiPostRequest("/api/account/getAccountDetails")
         .then((response) => {
           if (
             response.status === 200 &&
@@ -34,7 +33,8 @@ export default function useAccount({ type = "owner" } = {}) {
           }
           setLoading(false);
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
           redirectToLogin();
           setLoading(false);
         });

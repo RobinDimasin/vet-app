@@ -15,6 +15,10 @@ class PetEntity extends Entity {
           type: "Char(1)",
           attributes: "NOT NULL CHECK (sex IN ('M','F'))",
         },
+        birthdate: {
+          type: "DateTime",
+          attributes: "NOT NULL",
+        },
         breed: {
           type: "Char(64)",
           attributes: "NOT NULL",
@@ -24,7 +28,7 @@ class PetEntity extends Entity {
           attributes: "NOT NULL",
         },
         description: {
-          type: "VarChar(64)",
+          type: "VarChar(512)",
           attributes: "NOT NULL",
         },
       },
@@ -37,9 +41,11 @@ class PetEntity extends Entity {
     });
   }
 
-  async new({ name, sex, breed, species, description }) {
+  async new({ owner_id, name, birthdate, sex, breed, species, description }) {
     return await super.new({
+      owner_id,
       name,
+      birthdate,
       sex,
       breed,
       species,
