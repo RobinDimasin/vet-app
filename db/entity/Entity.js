@@ -282,17 +282,18 @@ export default class Entity {
     }
 
     return await entity.execute({
-      query: `SELECT * FROM ${this.name} ${entity.primaryKey
-        .map(
-          (key) =>
-            `INNER JOIN ${entity.name} ON ${this.name}.${
-              entity.getColumn(key).asForeignKey
-            } = ${entity.name}.${key}`
-        )
-        .join(" ")} ${
-        Object.key(query).length > 0 ? "WHERE" : ""
+      query: `SELECT * FROM ${this.name} ${
+        Object.keys(query).length > 0 ? "WHERE" : ""
       } ${Object.keys(query)
         .map((column) => `${column} = ?`)
+        .join(" AND ")} 
+        INNER JOIN ${entity.name} ON ${entity.primaryKey
+        .map(
+          (key) =>
+            `${this.name}.${entity.getColumn(key).asForeignKey} = ${
+              entity.name
+            }.${key}`
+        )
         .join(" AND ")};`,
       values: Object.values(query),
     });
