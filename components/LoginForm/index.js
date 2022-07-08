@@ -42,7 +42,6 @@ export default function LoginForm({ type = "owner" }) {
           setAccount(response.data.data.account);
           Router.push(Router.query.destination ?? "/");
         } else {
-          console.log(response.data);
           setError(response.data.message);
         }
       } else {

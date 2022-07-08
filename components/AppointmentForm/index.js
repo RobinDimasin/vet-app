@@ -7,17 +7,21 @@ import SelectField from "@components/Form/Field/SelectField";
 import DateField from "@components/Form/Field/DateField";
 import TextAreaField from "@components/Form/Field/TextAreaField";
 
-export default function AppointmentForm({ pets = [], reasons = [] }) {
+export default function AppointmentForm({
+  pets = [],
+  reasons = [],
+  values = {
+    pet_id: "",
+    reason: "",
+    description: "",
+    date: "",
+  },
+}) {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
-    initialValues: {
-      pet_id: "",
-      reason: "",
-      description: "",
-      date: "",
-    },
+    initialValues: values,
     validationSchema: Yup.object({
       pet_id: Yup.string().required("Required"),
       reason: Yup.string().required("Required"),

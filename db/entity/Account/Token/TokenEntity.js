@@ -25,10 +25,9 @@ class TokenEntity extends Entity {
     this.addFunction("decode", async (token) => await this.decode(token));
   }
 
-  async new({ token, account_id }) {
+  async new({ token }) {
     return await super.new({
       token,
-      account_id,
     });
   }
 
@@ -40,7 +39,7 @@ class TokenEntity extends Entity {
     const exists = await this.exists(token);
 
     if (exists) {
-      this.delete({
+      await this.delete({
         token,
       });
     }
@@ -53,7 +52,6 @@ class TokenEntity extends Entity {
       try {
         return jwt.verify(token, process.env.JWT_SECRET);
       } catch (e) {
-        console.log(e);
         return null;
       }
     } else {

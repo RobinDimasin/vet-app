@@ -10,7 +10,8 @@ export default withAccount(
         .json({ status: STATUS.NOT_OK, message: "Method not allowed" });
     }
 
-    const { id } = req.body;
+    const { id, owner_id, name, sex, breed, birthdate, species, description } =
+      req.body;
 
     if (!id) {
       res
@@ -28,15 +29,18 @@ export default withAccount(
 
     const { account_type } = token;
 
-    if (!(account_type === "admin" || pet.owner_id === token.id)) {
+    if (
+      !(
+        ["admin", "veterinarian"].includes(account_type) ||
+        pet.owner_id === token.id
+      )
+    ) {
       return res
         .status(403)
         .json({ status: STATUS.NOT_OK, message: "Invalid credentials" });
     }
 
-    const x = await EntityList.pet.delete({ id });
-
-    return res.status(200).json(x);
+    return res.status(200).json(await EntityList.pet.get({ id }));
   },
-  ["owner", "admin"]
+  ["owner", "admin", "veterinarian"]
 );

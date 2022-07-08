@@ -34,7 +34,6 @@ export default function useAccount({ type = "owner" } = {}) {
           setLoading(false);
         })
         .catch((e) => {
-          console.log(e);
           redirectToLogin();
           setLoading(false);
         });

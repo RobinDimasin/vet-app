@@ -45,7 +45,9 @@ export default function Appointment() {
               }}
             ></div>
           ) : (
-            <AppointmentForm pets={pets} reasons={reasons} />
+            <div className="card w-[32rem] bg-base-100 shadow-xl">
+              <AppointmentForm pets={pets} reasons={reasons} />
+            </div>
           )}
         </div>
       </div>

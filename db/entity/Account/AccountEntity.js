@@ -92,7 +92,11 @@ class AccountEntity extends Entity {
             process.env.JWT_SECRET
           );
 
-          await Token.new({ token, [asForeignKey]: account.id });
+          await this.addRelationshipValue(
+            Token.entityType,
+            { id: account.id },
+            { token_id: (await Token.new({ token })).data[0].id }
+          );
 
           let subtypeDetails = {};
 

@@ -12,7 +12,7 @@ export default function Form({
   return (
     <FormProvider formik={formik}>
       <form
-        className={className ?? "card w-[32rem] bg-base-100 shadow-xl"}
+        // className={className ?? "card w-[32rem] bg-base-100 shadow-xl"}
         onSubmit={formik.handleSubmit}
       >
         <div className="card-body space-y-1">
