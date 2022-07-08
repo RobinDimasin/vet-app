@@ -2,18 +2,27 @@ import NavigationBar from "@components/NavigationBar/NavigationBar";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "@styles/globals.css";
 import AccountProvider from "@components/context/Account/AccountProvider";
+import ModalProvider from "@components/context/Modal/ModalProvider";
+import Modal from "react-modal";
+
 const queryClient = new QueryClient();
+
+Modal.setAppElement("#__next");
 
 function MyApp({ Component, pageProps }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AccountProvider>
+    <div id="myApp">
+      <QueryClientProvider client={queryClient}>
         <div data-theme="cupcake">
-          <NavigationBar />
-          <Component {...pageProps} />
+          <ModalProvider>
+            <AccountProvider>
+              <NavigationBar />
+              <Component {...pageProps} />
+            </AccountProvider>
+          </ModalProvider>
         </div>
-      </AccountProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </div>
   );
 }
 

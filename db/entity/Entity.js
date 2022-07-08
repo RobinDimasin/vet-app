@@ -516,16 +516,42 @@ export default class Entity {
     const keys = _entry.map(([key]) => key);
     const values = _entry.map(([_, value]) => value);
 
-    return await this.execute({
-      query: `UPDATE ${this.name} SET ${keys
-        .map((key) => `${key}=?`)
-        .join(", ")} ${
+    const queries = [
+      `UPDATE ${this.name} SET ${keys.map((key) => `${key}=?`).join(", ")} ${
         Object.entries(match).length > 0 ? "WHERE" : ""
       } ${Object.keys(match)
         .map((column) => `${column}=?`)
         .join(" && ")}`,
-      values: [...values, ...Object.values(match)],
+      `SELECT * FROM ${this.name} WHERE ${this.primaryKey
+        .map((pk) => `${pk} = ?`)
+        .join(", ")}`,
+    ];
+
+    const response = await this.execute({
+      query: queries.join("; "),
+      values: [
+        ...values,
+        ...Object.values(match),
+        ...this.primaryKey.map((pk) => match[pk]),
+      ],
     });
+
+    try {
+      if (response.status === STATUS.OK) {
+        const data = response.data[1][0];
+        return {
+          status: response.status,
+          data: data ? [data] : [],
+        };
+      } else {
+        return response;
+      }
+    } catch (e) {
+      return {
+        status: STATUS.NOT_OK,
+        message: "error",
+      };
+    }
   }
 
   /**
@@ -589,7 +615,6 @@ export default class Entity {
   async createConstraints() {
     if (!this.#isConstraintsCreated) {
       for (const [key, constraint] of Object.entries(this.constraints)) {
-        // console.log(this.entityType, key, constraint);
         await executeQuery({
           query: `ALTER TABLE ${this.name} ADD CONSTRAINT ${key} ${constraint}`,
         });

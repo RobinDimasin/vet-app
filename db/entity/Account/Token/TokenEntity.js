@@ -52,7 +52,6 @@ class TokenEntity extends Entity {
       try {
         return jwt.verify(token, process.env.JWT_SECRET);
       } catch (e) {
-        console.log(e);
         return null;
       }
     } else {

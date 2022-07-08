@@ -10,7 +10,8 @@ export default withAccount(
         .json({ status: STATUS.NOT_OK, message: "Method not allowed" });
     }
 
-    const { id } = req.body;
+    const { id, owner_id, name, sex, breed, birthdate, species, description } =
+      req.body;
 
     if (!id) {
       res
@@ -34,9 +35,20 @@ export default withAccount(
         .json({ status: STATUS.NOT_OK, message: "Invalid credentials" });
     }
 
-    const x = await EntityList.pet.delete({ id });
-
-    return res.status(200).json(x);
+    return res.status(200).json(
+      await EntityList.pet.update(
+        { id },
+        {
+          owner_id,
+          name,
+          sex,
+          breed,
+          birthdate,
+          species,
+          description,
+        }
+      )
+    );
   },
   ["owner", "admin"]
 );

@@ -2,19 +2,19 @@ import Form from "@components/Form/Form";
 import TextInputField from "@components/Form/Field/TextInputField";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import Link from "next/link";
 import { useMutation } from "react-query";
-import axios from "axios";
-import CryptoJS from "crypto-js";
 import { useContext, useState } from "react";
 import AccountContext from "@components/context/Account/AccountContext";
-import Router from "next/router";
 import { makeApiPostRequest } from "utility";
 import SelectField from "@components/Form/Field/SelectField";
 import TextAreaField from "@components/Form/Field/TextAreaField";
 import DateField from "@components/Form/Field/DateField";
 
-export default function PetForm() {
+export default function NewPetForm({
+  onSuccess = () => {},
+  onError = () => {},
+  ...props
+}) {
   const [error, setError] = useState();
   const { account } = useContext(AccountContext);
 
@@ -46,7 +46,7 @@ export default function PetForm() {
         .max(64, "Must be 64 characters or less")
         .required("Required"),
       sex: Yup.string().oneOf(["M", "F"], "M or F only").required("Required"),
-      birthdate: Yup.date(),
+      birthdate: Yup.date().required("Required"),
       breed: Yup.string()
         .max(64, "Must be 64 characters or less")
         .required("Required"),
@@ -55,15 +55,18 @@ export default function PetForm() {
         .required("Required"),
       description: Yup.string().max(512, "Must be 512 characters or less"),
     }),
-    onSubmit: async (values, { setFieldError }) => {
+    onSubmit: async (values, { setFieldError, resetForm }) => {
       if (account && account.account_type === "owner") {
         const response = await createNewPetProfile.mutateAsync({
           ...values,
           owner_id: account.id,
         });
 
-        if (response.status === 200) {
-          console.log(response.data);
+        if (response.status === 200 && response.data.status === "OK") {
+          resetForm();
+          onSuccess(response.data.data[0]);
+        } else {
+          onError();
         }
       }
     },
@@ -73,16 +76,19 @@ export default function PetForm() {
     <Form
       className="card w-96 bg-base-100 shadow-xl"
       formik={formik}
-      title="Pet"
+      title="Create Pet Profile"
       error={error}
       submitButton={
         <button
-          className={`btn btn-primary fluid ${false ? "loading" : ""}`}
+          className={`btn btn-primary fluid ${
+            createNewPetProfile.isLoading ? "loading" : ""
+          }`}
           type="submit"
         >
-          Create Pet Profile
+          Create
         </button>
       }
+      {...props}
     >
       <TextInputField id="name" type="text" placeholder="Name" />
       <SelectField
