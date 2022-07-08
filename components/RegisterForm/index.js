@@ -86,7 +86,7 @@ export default function RegisterForm() {
             loginResponse.data.status === "OK"
           ) {
             setAccount(loginResponse.data.data.account);
-            Router.push("/");
+            Router.push(Router.query.destination ?? "/");
           }
         } else {
           setError(registerResponse.data.message);
