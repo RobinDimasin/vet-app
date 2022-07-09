@@ -74,7 +74,6 @@ export default function NewPetForm({
 
   return (
     <Form
-      className="card w-96 bg-base-100 shadow-xl"
       formik={formik}
       title="Create Pet Profile"
       error={error}
