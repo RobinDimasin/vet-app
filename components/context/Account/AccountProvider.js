@@ -17,8 +17,6 @@ export default function AccountProvider({ children }) {
   useEffect(() => {
     if (account) {
       localStorage.setItem("account", JSON.stringify(account));
-    } else {
-      localStorage.removeItem("account");
     }
   }, [account]);
 
@@ -29,6 +27,7 @@ export default function AccountProvider({ children }) {
         setAccount,
         logout: async () => {
           setAccount(null);
+          localStorage.removeItem("account");
           return (
             (await makeApiPostRequest("/api/account/logout")).status === 200
           );

@@ -1,29 +1,27 @@
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Form from "@components/Form/Form";
 import { useMutation } from "react-query";
-import axios from "axios";
 import TextInputField from "@components/Form/Field/TextInputField";
 import CryptoJS from "crypto-js";
 import Router from "next/router";
 import AccountContext from "@components/context/Account/AccountContext";
-import { getBaseURL, makeApiPostRequest } from "utility";
+import { makeApiPostRequest } from "utility";
 
 export default function RegisterForm() {
   const [error, setError] = useState();
   const { setAccount } = useContext(AccountContext);
 
   const register = useMutation((data) => {
-    return makeApiPostRequest(`/api/entity/owner/new`, {
-      args: [data],
-    });
+    return makeApiPostRequest(`/api/account/register/owner`, data);
   });
 
-  const login = useMutation((data) => {
-    return makeApiPostRequest(`/api/entity/account/login`, {
-      args: [data],
+  const login = useMutation(({ email, password }) => {
+    return makeApiPostRequest("/api/account/login", {
+      email,
+      hashed_password: CryptoJS.SHA512(password).toString(),
     });
   });
 
@@ -78,7 +76,7 @@ export default function RegisterForm() {
         if (registerResponse.data.status === "OK") {
           const loginResponse = await login.mutateAsync({
             email: data.email,
-            hashed_password,
+            password: values.password,
           });
 
           if (
@@ -86,7 +84,7 @@ export default function RegisterForm() {
             loginResponse.data.status === "OK"
           ) {
             setAccount(loginResponse.data.data.account);
-            Router.push("/");
+            Router.push(Router.query.destination ?? "/");
           }
         } else {
           setError(registerResponse.data.message);

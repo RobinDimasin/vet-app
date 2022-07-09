@@ -8,11 +8,12 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 import { useContext, useState } from "react";
 import AccountContext from "@components/context/Account/AccountContext";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { getBaseURL, makeApiPostRequest } from "utility";
 
 export default function LoginForm({ type = "owner" }) {
   const [error, setError] = useState();
+  const router = useRouter();
   const { account, setAccount } = useContext(AccountContext);
 
   const login = useMutation(({ email, password }) => {
@@ -40,7 +41,7 @@ export default function LoginForm({ type = "owner" }) {
       if (response.status === 200) {
         if (response.data.status === "OK") {
           setAccount(response.data.data.account);
-          Router.push(Router.query.destination ?? "/");
+          router.push(router.query.destination ?? "/");
         } else {
           setError(response.data.message);
         }
@@ -74,7 +75,14 @@ export default function LoginForm({ type = "owner" }) {
       footer={
         <p className="text-center text-xs">
           Not registered yet?{" "}
-          <Link href="/register">
+          <Link
+            href={
+              "/register" +
+              (router.query.destination
+                ? `?destination=${router.query.destination}`
+                : "")
+            }
+          >
             <a className="link link-primary">Register Now!</a>
           </Link>
         </p>
