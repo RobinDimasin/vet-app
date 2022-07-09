@@ -247,17 +247,17 @@ export default class Entity {
       .map((key) => entity.getColumn(key).asForeignKey)
       .join(", ");
 
-    if (
-      [
-        Entity.Relationship.ONE_TO_ONE,
-        Entity.Relationship.ONE_TO_MANY,
-      ].includes(type)
-    ) {
-      this.addConstraint(
-        `${entity.name}_relationship_uniqueness`,
-        `UNIQUE (${asForeignKeyJoined})`
-      );
-    }
+    // if (
+    //   [
+    //     Entity.Relationship.ONE_TO_ONE,
+    //     Entity.Relationship.ONE_TO_MANY,
+    //   ].includes(type)
+    // ) {
+    //   this.addConstraint(
+    //     `${entity.name}_relationship_uniqueness`,
+    //     `UNIQUE (${asForeignKeyJoined})`
+    //   );
+    // }
 
     this.addConstraint(
       `${entity.name}_relationship_constraint`,
@@ -471,8 +471,8 @@ export default class Entity {
 
     const _entry = Object.entries(entry).filter(([key]) => this.hasColumn(key));
 
-    const keys = _entry.map(([key]) => key);
-    const values = _entry.map(([_, value]) => value);
+    const keys = _entry.map(([key]) => key).filter((key) => entry[key]);
+    const values = keys.map((key) => entry[key]);
 
     const queries = [
       `INSERT INTO ${this.name} (${keys.join(", ")}) VALUES (${values
@@ -480,7 +480,7 @@ export default class Entity {
         .join(", ")})`,
       `SELECT * FROM ${this.name} WHERE ${this.primaryKey
         .map((pk) => `${pk} = ?`)
-        .join(", ")}`,
+        .join(" AND ")}`,
     ];
 
     const response = await this.execute({
