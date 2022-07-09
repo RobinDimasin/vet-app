@@ -3,6 +3,7 @@ import ReactModal from "react-modal";
 
 export default function FormModal({
   trigger,
+  className,
   form,
   onSuccess = () => {},
   onError = () => {},
@@ -38,7 +39,7 @@ export default function FormModal({
         contentLabel="Example Modal"
       >
         <div data-theme="cupcake">
-          <div className="card bg-base-100 shadow-xl">
+          <div className={`card bg-base-100 shadow-xl ${className}`}>
             <div className="card-body">
               <button
                 onClick={closeModal}

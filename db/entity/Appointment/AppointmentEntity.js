@@ -18,11 +18,9 @@ class AppointmentEntity extends AssociativeEntity {
         },
         weight: {
           type: "DECIMAL(13, 2)",
-          attributes: "NOT NULL",
         },
         temperature: {
           type: "DECIMAL(13, 2)",
-          attributes: "NOT NULL",
         },
         prescription: {
           type: "VarChar(64)",
