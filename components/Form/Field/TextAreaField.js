@@ -17,6 +17,7 @@ export default function TextAreaField({
       placeholder={placeholder}
       required
       {...props}
+      rows={1}
     />
   );
 }

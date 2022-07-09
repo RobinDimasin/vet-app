@@ -1,4 +1,5 @@
 import { createElement, useContext, useEffect, useState } from "react";
+import { getValueFromObject } from "utility";
 import FormContext from "../FormContext";
 
 export default function Field({ id, label, required, as, ...props }) {
@@ -7,7 +8,9 @@ export default function Field({ id, label, required, as, ...props }) {
 
   useEffect(() => {
     if (formik) {
-      setError(formik.touched[id] && formik.errors[id]);
+      if (getValueFromObject(formik.touched, id)) {
+        setError(getValueFromObject(formik.errors, id));
+      }
     }
   }, [formik, id]);
 
@@ -18,6 +21,13 @@ export default function Field({ id, label, required, as, ...props }) {
           {createElement(as, {
             ...props,
             ...formik.getFieldProps(id),
+            onBlur: (...args) => {
+              if (props.onBlur) {
+                props.onBlur(...args);
+              }
+
+              return formik.getFieldProps(id).onBlur(...args);
+            },
             className: [
               props.className ?? "",
               error ? `${as}-error` : "",
@@ -27,9 +37,7 @@ export default function Field({ id, label, required, as, ...props }) {
           {error || label ? (
             <>
               <label className="label py-0 space-y-0">
-                <span className="label-text text-xs text-error">
-                  {formik.errors[id]}
-                </span>
+                <span className="label-text text-xs text-error">{error}</span>
                 {label}
               </label>
             </>

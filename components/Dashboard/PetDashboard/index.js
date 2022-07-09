@@ -20,6 +20,8 @@ function makeProperty(label, value, formatter = (v) => v) {
 
 function PetInfo({ data: _pet, onDelete = () => {} }) {
   const [pet, setPet] = useState(_pet);
+  const [deleting, setDeleting] = useState(false);
+  const [deletionConfirming, setDeletionConfirming] = useState(false);
 
   return (
     <div className="break-inside card card-compact bg-base-100 shadow-xl">
@@ -50,19 +52,36 @@ function PetInfo({ data: _pet, onDelete = () => {} }) {
             }}
           />
           <button
-            className="btn btn-error btn-sm drop-shadow"
+            className={`btn btn-error btn-sm drop-shadow ${
+              deleting ? "loading btn-disabled" : ""
+            }`}
             onClick={async () => {
-              const response = await makeApiPostRequest("/api/pet/delete", {
-                id: pet.id,
-              });
+              if (deletionConfirming) {
+                setDeleting(true);
+                const response = await makeApiPostRequest("/api/pet/delete", {
+                  id: pet.id,
+                });
 
-              if (response.status === 200 && response.data.status === "OK") {
-                onDelete(pet);
+                if (response.status === 200 && response.data.status === "OK") {
+                  onDelete(pet);
+                }
+                setDeleting(false);
+                setDeletionConfirming(false);
+              } else {
+                setDeletionConfirming(true);
               }
             }}
           >
-            <Icon icon={<DeleteIcon />} />
-            Delete
+            {deleting ? (
+              "Deleting..."
+            ) : !deletionConfirming ? (
+              <>
+                <Icon icon={<DeleteIcon />} />
+                Delete
+              </>
+            ) : (
+              "Are you sure?"
+            )}
           </button>
         </div>
       </div>

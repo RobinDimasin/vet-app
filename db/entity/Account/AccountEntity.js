@@ -41,6 +41,7 @@ class AccountEntity extends Entity {
         {
           type: Entity.Relationship.ONE_TO_MANY,
           entity: Token,
+          onDelete: Entity.ReferenceOption.SET_NULL,
         },
       ],
     });

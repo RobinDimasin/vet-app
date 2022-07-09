@@ -26,8 +26,12 @@ export default class AssociativeEntity extends Entity {
       for (const pk of entity.primaryKey) {
         const column = entity.getColumn(pk);
 
-        this.addColumn(column.asForeignKey, column.type, {
-          attributes: "NOT NULL",
+        // this.addColumn(column.asForeignKey, column.type, {
+        //   attributes: "NOT NULL",
+        // });
+
+        this.addRelationship({
+          entity,
         });
       }
     }
