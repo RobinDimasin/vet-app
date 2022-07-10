@@ -31,6 +31,7 @@ export default function NavigationBar() {
           {
             key: "reviews",
             label: "Reviews",
+            route: "/reviews",
           },
           {
             key: "faq",
@@ -155,6 +156,7 @@ export default function NavigationBar() {
           {
             key: "reviews",
             label: "Reviews",
+            route: "/reviews",
           },
           {
             key: "faq",
