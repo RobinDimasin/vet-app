@@ -35,10 +35,12 @@ export default function NavigationBar() {
           {
             key: "faq",
             label: "FAQ",
+            route: "/faq",
           },
           {
             key: "contact",
             label: "Contact Us",
+            route: "/contact-us",
           },
         ],
       },
@@ -157,10 +159,12 @@ export default function NavigationBar() {
           {
             key: "faq",
             label: "FAQ",
+            route: "/faq",
           },
           {
             key: "contact",
             label: "Contact Us",
+            route: "/contact-us",
           },
         ],
       },
