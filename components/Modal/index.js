@@ -15,7 +15,16 @@ export default function Modal({ trigger, children }) {
 
   return (
     <>
-      {trigger && React.cloneElement(trigger, { onClick: openModal })}
+      {trigger &&
+        React.cloneElement(trigger, {
+          onClick: () => {
+            if (trigger.props.onClick) {
+              trigger.props.onClick();
+            }
+
+            openModal();
+          },
+        })}
       <ReactModal
         isOpen={open}
         onRequestClose={closeModal}

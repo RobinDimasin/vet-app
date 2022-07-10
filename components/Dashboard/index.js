@@ -39,26 +39,28 @@ export default function Dashboard({
               {typeof name === "function" ? name(account) : name ?? "Dashboard"}
             </h2>
             <div className="card-actions justify-end">
-              <FormModal
-                trigger={
-                  <button className="btn btn-primary">
-                    <Icon icon={<PlusIcon />} />
-                    <p className="hidden md:block">
-                      {newRecordButtonLabel
-                        ? newRecordButtonLabel
-                        : `New ${name}`}
-                    </p>
-                    <p className="block md:hidden">New</p>
-                  </button>
-                }
-                form={React.cloneElement(newRecordForm)}
-                onSuccess={(newData) => {
-                  queryClient.setQueryData(id, (oldData) => [
-                    newData,
-                    ...oldData,
-                  ]);
-                }}
-              />
+              {newRecordForm ? (
+                <FormModal
+                  trigger={
+                    <button className="btn btn-primary">
+                      <Icon icon={<PlusIcon />} />
+                      <p className="hidden md:block">
+                        {newRecordButtonLabel
+                          ? newRecordButtonLabel
+                          : `New ${name}`}
+                      </p>
+                      <p className="block md:hidden">New</p>
+                    </button>
+                  }
+                  form={React.cloneElement(newRecordForm)}
+                  onSuccess={(newData) => {
+                    queryClient.setQueryData(id, (oldData) => [
+                      newData,
+                      ...oldData,
+                    ]);
+                  }}
+                />
+              ) : null}
             </div>
           </div>
         </div>
