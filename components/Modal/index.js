@@ -26,8 +26,9 @@ export default function Modal({ trigger, children }) {
             right: "auto",
             bottom: "auto",
             marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, 0)",
             border: "none",
+            paddingBottom: "40px",
             backgroundColor: "transparent",
           },
         }}
@@ -35,7 +36,7 @@ export default function Modal({ trigger, children }) {
       >
         <div data-theme="cupcake">
           <div className="card bg-base-100 shadow-xl">
-            <div className="card-body">
+            <div className="card-body card-compact">
               <button
                 onClick={closeModal}
                 className="btn btn-sm btn-ghost btn-circle absolute right-2 top-2"

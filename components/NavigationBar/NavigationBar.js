@@ -183,7 +183,7 @@ export default function NavigationBar() {
 
   return (
     <div
-      className={`navbar bg-transparent ${styles.navbar} md:px-[10%] duration-500 z-50 fixed`}
+      className={`navbar bg-transparent ${styles.navbar} md:px-[10%] duration-500 z-50`}
       data-scrolled={scrolled}
     >
       <div className="navbar-start space-x-1">
