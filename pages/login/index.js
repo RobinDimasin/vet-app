@@ -9,7 +9,7 @@ export default function LoginPage() {
     <div className="hero">
       <div className="hero-content flex-col lg:flex-row-reverse md:px-[10%]">
         <div className="card w-96 bg-base-100 shadow-xl">
-          <LoginForm accountType={type} />
+          <LoginForm type={type} />
         </div>
       </div>
     </div>

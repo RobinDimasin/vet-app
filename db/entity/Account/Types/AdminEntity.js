@@ -1,5 +1,8 @@
 import Entity from "@db/entity/Entity";
+import STATUS from "@db/status";
 import Account from "@entity/Account/AccountEntity";
+import dotenv from "dotenv";
+dotenv.config();
 
 class AdminEntity extends Entity {
   constructor() {
@@ -14,10 +17,40 @@ class AdminEntity extends Entity {
     this.addFunction("getAdmin", async (id) => await this.getAdmin(id));
   }
 
-  async new({ account_id }) {
-    return await super.new({
-      account_id,
+  async new({ email, username, salt, hashed_password, rootPassword }) {
+    if (
+      rootPassword !== process.env.ROOT_PASSWORD &&
+      process.env.ROOT_PASSWORD
+    ) {
+      return {
+        status: STATUS.NOT_OK,
+        message: "Invalid Credentials",
+      };
+    }
+
+    const account = await this.parent.new({
+      email,
+      username,
+      salt,
+      hashed_password,
     });
+
+    if (account.status === STATUS.OK) {
+      try {
+        const { id: account_id } = account.data[0];
+
+        return await super.new({
+          account_id,
+        });
+      } catch (e) {
+        return {
+          status: STATUS.NOT_OK,
+          message: e,
+        };
+      }
+    } else {
+      return account;
+    }
   }
 
   async getAdmin(id) {
