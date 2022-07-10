@@ -176,6 +176,7 @@ class AccountEntity extends Entity {
       return {
         id: account.id,
         email: account.email,
+        username: account.username,
         account_type: account.account_type,
         ...subtypeDetails,
       };

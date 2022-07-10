@@ -15,19 +15,27 @@ export default function Modal({ trigger, children }) {
 
   return (
     <>
-      {trigger && React.cloneElement(trigger, { onClick: openModal })}
+      {trigger &&
+        React.cloneElement(trigger, {
+          onClick: () => {
+            if (trigger.props.onClick) {
+              trigger.props.onClick();
+            }
+
+            openModal();
+          },
+        })}
       <ReactModal
         isOpen={open}
         onRequestClose={closeModal}
         style={{
           content: {
-            top: "50%",
             left: "50%",
             right: "auto",
             bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, 0)",
             border: "none",
+            paddingBottom: "40px",
             backgroundColor: "transparent",
           },
         }}
@@ -35,7 +43,7 @@ export default function Modal({ trigger, children }) {
       >
         <div data-theme="cupcake">
           <div className="card bg-base-100 shadow-xl">
-            <div className="card-body">
+            <div className="card-body card-compact">
               <button
                 onClick={closeModal}
                 className="btn btn-sm btn-ghost btn-circle absolute right-2 top-2"

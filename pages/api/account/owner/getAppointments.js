@@ -21,7 +21,10 @@ export default withAccount(
 
         const response = await Promise.all(
           responseForm.data.map(async (form) => {
-            return await EntityList.appointment.find({ form_id: form.id });
+            return {
+              ...(await EntityList.appointment.find({ form_id: form.id })),
+              owner_id: form.owner_id,
+            };
           })
         );
 
@@ -30,7 +33,14 @@ export default withAccount(
         if (okay) {
           return res.status(200).json({
             status: STATUS.OK,
-            data: response.map((r) => r.data),
+            data: response.map((r) => {
+              return r.data.map((d) => {
+                return {
+                  ...d,
+                  owner_id: r.owner_id,
+                };
+              });
+            }),
           });
         } else {
           return res.status(500).json({

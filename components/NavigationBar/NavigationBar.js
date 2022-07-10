@@ -7,6 +7,7 @@ const CATEGORY = {
   ACCOUNT: "ACCOUNT",
   NAVIGATION: "NAVIGATION",
   AUTHENTICATION: "AUTHENTICATION",
+  DASHBOARD: "DASHBOARD",
 };
 
 export default function NavigationBar() {
@@ -25,7 +26,7 @@ export default function NavigationBar() {
           {
             key: "appointment",
             label: "Appointment",
-            route: "/appointment",
+            route: "/appointments",
           },
           {
             key: "reviews",
@@ -48,13 +49,13 @@ export default function NavigationBar() {
             key: "register",
             label: "Register",
             route: "/register",
-            visible: !account,
+            visible: () => !account,
           },
           {
             key: "Login",
             label: "Login",
             route: "/login",
-            visible: !account,
+            visible: () => !account,
             render: ({ key, label, route }) => {
               return (
                 <Link href={route} key={key}>
@@ -68,7 +69,9 @@ export default function NavigationBar() {
     };
 
     for (const [key, category] of Object.entries(topMenu)) {
-      category.routes = category.routes.filter(({ visible = true }) => visible);
+      category.routes = category.routes.filter(({ visible = true }) =>
+        typeof visible === "function" ? visible() : visible
+      );
 
       if (category.routes.length === 0) {
         delete topMenu[key];
@@ -81,13 +84,56 @@ export default function NavigationBar() {
         routes: [
           {
             key: "pets",
-            label: "Pets",
+            label: "My Pets",
             route: "/pets",
+            visible: () => account && account.account_type === "owner",
           },
           {
             key: "appointment",
-            label: "Appointments",
+            label: "My Appointments",
             route: "/appointments",
+            visible: () => account && account.account_type === "owner",
+          },
+        ],
+      },
+      [CATEGORY.DASHBOARD]: {
+        label: "Dashboard",
+        routes: [
+          {
+            key: "account_dashboard",
+            label: "Account Dashboard",
+            route: "/accounts",
+            visible: () => account && account.account_type === "admin",
+          },
+          {
+            key: "pet_dashboard",
+            label: "Pet Dashboard",
+            route: "/pets",
+            visible: () => account && account.account_type === "admin",
+          },
+          {
+            key: "appointment_dashboard",
+            label: "Appointment Dashboard",
+            route: "/appointments",
+            visible: () => account && account.account_type === "admin",
+          },
+          {
+            key: "reason_dashboard",
+            label: "Reason Dashboard",
+            route: "/reasons",
+            visible: () => account && account.account_type === "admin",
+          },
+          {
+            key: "veterinarian_register",
+            label: "Register Veterinarian",
+            route: "/register?type=veterinarian",
+            visible: () => account && account.account_type === "admin",
+          },
+          {
+            key: "available_appointment",
+            label: "Available Appointments",
+            route: "/appointments",
+            visible: () => account && account.account_type === "veterinarian",
           },
         ],
       },
@@ -102,7 +148,7 @@ export default function NavigationBar() {
           {
             key: "appointment",
             label: "Appointment",
-            route: "/appointment",
+            route: "/appointments",
           },
           {
             key: "reviews",
@@ -155,7 +201,9 @@ export default function NavigationBar() {
     };
 
     for (const [key, category] of Object.entries(dropdownMenu)) {
-      category.routes = category.routes.filter(({ visible = true }) => visible);
+      category.routes = category.routes.filter(({ visible = true }) =>
+        typeof visible === "function" ? visible() : visible
+      );
 
       if (category.routes.length === 0) {
         delete dropdownMenu[key];
@@ -183,7 +231,7 @@ export default function NavigationBar() {
 
   return (
     <div
-      className={`navbar bg-transparent ${styles.navbar} md:px-[10%] duration-500 z-50 fixed`}
+      className={`navbar bg-transparent ${styles.navbar} md:px-[10%] duration-500 z-50`}
       data-scrolled={scrolled}
     >
       <div className="navbar-start space-x-1">

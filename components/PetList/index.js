@@ -4,18 +4,8 @@ import Icon from "@components/icons/Icon";
 import Masonry from "@components/Masonry";
 import FormModal from "@components/Modal/FormModal";
 import EditPetForm from "@components/PetForm/EditPetForm";
-import moment from "moment";
 import { useState } from "react";
-import { makeApiPostRequest } from "utility";
-
-function makeProperty(label, value, formatter = (v) => v) {
-  return value ? (
-    <p className="break-words">
-      <b>{label}: </b>
-      {formatter(value)}
-    </p>
-  ) : null;
-}
+import { makeApiPostRequest, makeProperty } from "utility";
 
 function PetInfo({ pet: _pet, onDelete = () => {} }) {
   const [pet, setPet] = useState(_pet);
@@ -27,13 +17,11 @@ function PetInfo({ pet: _pet, onDelete = () => {} }) {
           <h2 className="card-title text-ellipsis font-bold truncate">
             {pet.name}
           </h2>
-          {makeProperty("Birthdate", pet.birthdate, (birthdate) =>
-            moment(birthdate).format("MMMM Do YYYY")
-          )}
-          {makeProperty("Sex", pet.sex)}
-          {makeProperty("Breed", pet.breed)}
-          {makeProperty("Species", pet.species)}
-          {makeProperty("Description", pet.description)}
+          {makeProperty("birthdate", pet)}
+          {makeProperty("sex", pet)}
+          {makeProperty("breed", pet)}
+          {makeProperty("species", pet)}
+          {makeProperty("description", pet)}
         </div>
         <div className="grid grid-cols-2 gap-4 drop-shadow">
           <FormModal

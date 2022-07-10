@@ -5,25 +5,19 @@ import withAccount from "lib/middleware/withAccount";
 export default withAccount(
   async (req, res) => {
     if (req.method === "POST") {
-      const { owner_id, name, sex, breed, birthdate, species, description } =
-        req.body;
+      const { id, reason } = req.body;
 
-      if (owner_id) {
+      if (id) {
         res.status(200).json(
-          await EntityList.pet.new({
-            owner_id,
-            name,
-            sex,
-            breed,
-            birthdate,
-            species,
-            description,
+          await EntityList.reason.new({
+            id,
+            reason,
           })
         );
       } else {
         res
           .status(400)
-          .json({ status: STATUS.NOT_OK, message: "Invalid Owner ID" });
+          .json({ status: STATUS.NOT_OK, message: "Invalid Reason ID" });
       }
     } else {
       res
@@ -31,5 +25,5 @@ export default withAccount(
         .json({ status: STATUS.NOT_OK, message: "Method not allowed" });
     }
   },
-  ["owner", "admin"]
+  ["admin"]
 );

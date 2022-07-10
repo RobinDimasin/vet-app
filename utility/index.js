@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 
 export const getBaseURL = () =>
   `${window.location.protocol}//${window.location.host}`;
@@ -36,4 +37,40 @@ export const LoadingDial = () => {
       ></div>
     </div>
   );
+};
+
+const valueFormatters = {
+  created_at: (v) => moment(v).format("LLL"),
+  birthdate: (v) => moment(v).format("MMMM Do YYYY"),
+};
+
+const keyFormatters = {
+  created_at: () => "Created",
+  account_id: () => "Account ID",
+  id: () => "ID",
+  license_no: () => "License Number",
+};
+
+export const makeProperty = (key, obj, format = {}) => {
+  const { value: valueFormatter, key: keyFormatter } = format;
+
+  return obj && obj[key] ? (
+    <p className="break-words">
+      <b>
+        {keyFormatter
+          ? keyFormatter(key)
+          : keyFormatters[key]
+          ? keyFormatters[key](key)
+          : key
+              .replaceAll("_", " ")
+              .replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}
+        :{" "}
+      </b>
+      {valueFormatter
+        ? valueFormatter(obj[key])
+        : valueFormatters[key]
+        ? valueFormatters[key](obj[key])
+        : obj[key]}
+    </p>
+  ) : null;
 };

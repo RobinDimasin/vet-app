@@ -1,44 +1,50 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import axios from "axios";
-import { getBaseURL, makeApiPostRequest } from "utility";
+import { useContext, useEffect, useMemo } from "react";
+import { makeApiPostRequest } from "utility";
 import { useRouter } from "next/router";
 import AccountContext from "@components/context/Account/AccountContext";
+import { useQuery } from "react-query";
 
 export default function useAccount({ type = "owner" } = {}) {
-  const [loading, setLoading] = useState(true);
-
   const { account, setAccount, logout } = useContext(AccountContext);
   const router = useRouter();
 
   const destination = useMemo(() => router.pathname, [router]);
 
-  useEffect(() => {
-    const redirectToLogin = () => {
-      router.push(`/login?type=${type}&destination=${destination}`);
-    };
+  const {
+    data: accountDetails,
+    isLoading,
+    isSuccess,
+  } = useQuery("fetch_account_details", async () => {
+    try {
+      const response = await makeApiPostRequest(
+        "/api/account/getAccountDetails"
+      );
 
-    setLoading(true);
-
-    if (type) {
-      makeApiPostRequest("/api/account/getAccountDetails")
-        .then((response) => {
-          if (
-            response.status === 200 &&
-            response.data.status === "OK" &&
-            response.data.data.account_type === type
-          ) {
-            setAccount(response.data.data);
-          } else {
-            redirectToLogin();
-          }
-          setLoading(false);
-        })
-        .catch((e) => {
-          redirectToLogin();
-          setLoading(false);
-        });
+      if (
+        response.status === 200 &&
+        response.data.status === "OK" &&
+        response.data.data.account_type === type
+      ) {
+        return response.data.data;
+      } else {
+        throw new Error("Invalid credentials");
+      }
+    } catch (error) {
+      return null;
     }
-  }, [type, setAccount, destination, router]);
+  });
 
-  return { account, logout, loading };
+  useEffect(() => {
+    if (type) {
+      if (isSuccess) {
+        if (accountDetails) {
+          setAccount(accountDetails);
+        } else {
+          router.push(`/login?type=${type}&destination=${destination}`);
+        }
+      }
+    }
+  }, [accountDetails, isSuccess, setAccount, type, destination, router]);
+
+  return { account, logout, loading: isLoading };
 }

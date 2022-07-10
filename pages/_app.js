@@ -16,8 +16,10 @@ function MyApp({ Component, pageProps }) {
         <div data-theme="cupcake">
           <ModalProvider>
             <AccountProvider>
-              <NavigationBar />
-              <Component {...pageProps} />
+              <div className="from-primary to-base-100 bg-gradient-to-r min-h-screen">
+                <NavigationBar />
+                <Component {...pageProps} />
+              </div>
             </AccountProvider>
           </ModalProvider>
         </div>

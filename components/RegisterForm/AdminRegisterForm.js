@@ -10,12 +10,12 @@ import Router from "next/router";
 import AccountContext from "@components/context/Account/AccountContext";
 import { makeApiPostRequest } from "utility";
 
-export default function RegisterForm() {
+export default function AdminRegisterForm() {
   const [error, setError] = useState();
   const { setAccount } = useContext(AccountContext);
 
   const register = useMutation((data) => {
-    return makeApiPostRequest(`/api/account/register/owner`, data);
+    return makeApiPostRequest(`/api/account/register/admin`, data);
   });
 
   const login = useMutation(({ email, password }) => {
@@ -29,33 +29,18 @@ export default function RegisterForm() {
     initialValues: {
       email: "",
       username: "",
-      first_name: "",
-      last_name: "",
-      middle_name: "",
-      address: "",
-      contact_number: "",
       password: "",
+      rootPassword: "",
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),
       username: Yup.string()
         .max(64, "Must be 64 characters or less")
         .required("Required"),
-      first_name: Yup.string()
-        .max(64, "Must be 64 characters or less")
-        .required("Required"),
-      last_name: Yup.string()
-        .max(64, "Must be 64 characters or less")
-        .required("Required"),
-      middle_name: Yup.string().max(64, "Must be 64 characters or less"),
-      address: Yup.string()
+      password: Yup.string()
         .max(256, "Must be 256 characters or less")
         .required("Required"),
-      contact_number: Yup.string()
-        .max(11, "Must be 11 characters or less")
-        .matches(/09[0-9]{9}/, "Invalid contact number. Example: 09123456789")
-        .required("Required"),
-      password: Yup.string()
+      rootPassword: Yup.string()
         .max(256, "Must be 256 characters or less")
         .required("Required"),
     }),
@@ -96,7 +81,7 @@ export default function RegisterForm() {
   return (
     <Form
       formik={formik}
-      title="Register"
+      title="Admin Register"
       error={error}
       submitButton={
         <button
@@ -108,34 +93,15 @@ export default function RegisterForm() {
           REGISTER
         </button>
       }
-      footer={
-        <p className="text-center text-xs">
-          Already registered?{" "}
-          <Link href="/login">
-            <a className="link link-primary">Login</a>
-          </Link>
-        </p>
-      }
     >
       <TextInputField id="email" type="email" placeholder="Email Address" />
       <TextInputField id="username" placeholder="Username" />
-      <div className="grid grid-flow-row grid-cols-3 gap-4">
-        <TextInputField id="last_name" placeholder="Last Name" />
-        <TextInputField id="first_name" placeholder="First Name" />
-        <TextInputField
-          id="middle_name"
-          placeholder="Middle Name"
-          required={false}
-        />
-      </div>
-      <TextInputField id="address" placeholder="Address" />
-      <TextInputField
-        id="contact_number"
-        type="tel"
-        placeholder="Contact Number"
-        pattern="09[0-9]{9}"
-      />
       <TextInputField id="password" type="password" placeholder="Password" />
+      <TextInputField
+        id="rootPassword"
+        type="password"
+        placeholder="Root Password"
+      />
     </Form>
   );
 }

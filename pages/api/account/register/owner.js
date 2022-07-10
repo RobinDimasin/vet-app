@@ -1,5 +1,5 @@
 import { register } from "./[type]";
 
 export default async function handler(req, res) {
-  return await register(req, res, "owner");
+  return await register("owner")(req, res);
 }

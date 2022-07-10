@@ -36,13 +36,9 @@ const Rating = () => {
 
 export default function Home() {
   return (
-    <div className="from-primary to-base-100 bg-gradient-to-r">
-      <div className="hero min-h-screen bg-transparent ">
-        <div className="hero-content flex-col lg:flex-row-reverse md:px-[5%]">
-          <img
-            src="/image/dog3.png"
-            className="max-w-sm rounded-lg shadow-2xl h-[400px]"
-          />
+    <>
+      <div className="hero pb-56 pt-12">
+        <div className="hero-content md:px-[5%]">
           <div className="text-center lg:text-start">
             <h1 className="text-5xl font-bold">Vetreatment: Pet Clinic</h1>
             <p className="py-6">
@@ -52,6 +48,10 @@ export default function Home() {
             </p>
             <button className="btn btn-accent">Make An Appointment Now!</button>
           </div>
+          <img
+            src="/image/dog3.png"
+            className="max-w-sm rounded-lg shadow-2xl h-[400px]"
+          />
         </div>
       </div>
 
@@ -141,8 +141,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </div>
+    </>
   );
 }

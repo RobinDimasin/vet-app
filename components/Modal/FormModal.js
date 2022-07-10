@@ -26,13 +26,12 @@ export default function FormModal({
         onRequestClose={closeModal}
         style={{
           content: {
-            top: "50%",
             left: "50%",
             right: "auto",
             bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, 0)",
             border: "none",
+            paddingBottom: "40px",
             backgroundColor: "transparent",
           },
         }}
@@ -40,7 +39,7 @@ export default function FormModal({
       >
         <div data-theme="cupcake">
           <div className={`card bg-base-100 shadow-xl ${className}`}>
-            <div className="card-body">
+            <div className="card-body card-compact">
               <button
                 onClick={closeModal}
                 className="btn btn-sm btn-ghost btn-circle absolute right-2 top-2"

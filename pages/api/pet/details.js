@@ -6,7 +6,7 @@ export default withAccount(
   async (req, res, token) => {
     if (req.method !== "POST") {
       res
-        .send(405)
+        .status(405)
         .json({ status: STATUS.NOT_OK, message: "Method not allowed" });
     }
 
