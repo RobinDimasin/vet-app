@@ -21,11 +21,9 @@ export default function Modal({ trigger, children }) {
         onRequestClose={closeModal}
         style={{
           content: {
-            top: "50%",
             left: "50%",
             right: "auto",
             bottom: "auto",
-            marginRight: "-50%",
             transform: "translate(-50%, 0)",
             border: "none",
             paddingBottom: "40px",
