@@ -1,3 +1,4 @@
+import { THEME } from "@utility/theme";
 import React, { useState } from "react";
 import ReactModal from "react-modal";
 
@@ -37,7 +38,7 @@ export default function FormModal({
         }}
         contentLabel="Example Modal"
       >
-        <div data-theme="cupcake">
+        <div data-theme={THEME}>
           <div className={`card bg-base-100 shadow-xl ${className}`}>
             <div className="card-body card-compact">
               <button

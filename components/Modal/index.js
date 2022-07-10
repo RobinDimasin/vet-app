@@ -1,4 +1,5 @@
 import ModalContext from "@components/context/Modal/ModalContext";
+import { THEME } from "@utility/theme";
 import React, { useContext, useEffect, useState } from "react";
 import ReactModal from "react-modal";
 
@@ -41,7 +42,7 @@ export default function Modal({ trigger, children }) {
         }}
         contentLabel="Example Modal"
       >
-        <div data-theme="cupcake">
+        <div data-theme={THEME}>
           <div className="card bg-base-100 shadow-xl">
             <div className="card-body card-compact">
               <button
