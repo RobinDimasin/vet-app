@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     }
   } else {
     res
-      .send(405)
+      .status(405)
       .json({ status: STATUS.NOT_OK, message: "Method not allowed" });
   }
 }
