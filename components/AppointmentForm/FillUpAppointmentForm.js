@@ -188,18 +188,9 @@ export default function FillUpAppointmentForm({
 
           const appointments = response.data.data;
 
-          onSuccess({
-            form_id: appointments[0].form_id,
-            date: appointments[0].appt_date,
-            owner_id: appointments[0].owner_id,
-            pets: appointments.map((appointment) => {
-              return {
-                pet_id: appointment.pet_id,
-                reason: appointment.reason_id,
-                description: appointment.reason_desc,
-              };
-            }),
-          });
+          queryClient.resetQueries("veterinarian_appointments");
+
+          onSuccess();
         } else {
           onError();
         }
