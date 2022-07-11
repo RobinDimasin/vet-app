@@ -23,6 +23,7 @@ import { LoadingDial, makeApiPostRequest } from "utility";
 import useAccount from "@components/hooks/useAccount";
 import FormModal from "@components/Modal/FormModal";
 import NewPetForm from "@components/PetForm/NewPetForm";
+import moment from "moment";
 
 export default function EditAppointmentForm({
   id,
@@ -75,7 +76,10 @@ export default function EditAppointmentForm({
   );
 
   const formik = useFormik({
-    initialValues: values,
+    initialValues: {
+      ...values,
+      date: moment(values.date).format("YYYY-MM-DD"),
+    },
     validationSchema: Yup.object({
       date: Yup.date().required("Required"),
       pets: Yup.array()

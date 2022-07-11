@@ -9,6 +9,7 @@ import { makeApiPostRequest } from "utility";
 import SelectField from "@components/Form/Field/SelectField";
 import TextAreaField from "@components/Form/Field/TextAreaField";
 import DateField from "@components/Form/Field/DateField";
+import moment from "moment";
 
 export default function EditPetForm({
   id,
@@ -43,7 +44,10 @@ export default function EditPetForm({
   );
 
   const formik = useFormik({
-    initialValues: values,
+    initialValues: {
+      ...values,
+      birthdate: moment(values.birthdate).format("YYYY-MM-DD"),
+    },
     validationSchema: Yup.object({
       name: Yup.string()
         .max(64, "Must be 64 characters or less")
