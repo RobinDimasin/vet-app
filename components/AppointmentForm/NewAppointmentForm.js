@@ -150,7 +150,7 @@ export default function NewAppointmentForm({
       >
         <DateField
           id="date"
-          placeholder="Choose a date"
+          placeholder="Date"
           min={moment().format("YYYY-MM-DD")}
         />
         <FieldArray name="pets">
@@ -203,7 +203,7 @@ export default function NewAppointmentForm({
                       <SelectField
                         id={`pets.${index}.reason`}
                         name={`pets.${index}.reason`}
-                        placeholder="Choose a reason"
+                        placeholder="Reason"
                         options={reasons.map((reason) => {
                           return {
                             id: reason.id,

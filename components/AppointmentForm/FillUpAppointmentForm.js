@@ -290,7 +290,7 @@ export default function FillUpAppointmentForm({
             disabled
           />
         </div>
-        <TextInputField id="date_label" placeholder="Choose a date" disabled />
+        <TextInputField id="date_label" placeholder="Date" disabled />
 
         <FieldArray name="pets">
           {({ insert, remove, push }) => (
@@ -358,16 +358,16 @@ export default function FillUpAppointmentForm({
                         </button>
                       ) : (
                         <>
-                          <br />
+                          <hr />
                           <DateField
                             id={`pets.${index}.next_appt_date`}
-                            placeholder="Choose Next Appointment Date"
+                            placeholder="Next Appointment Date"
                             min={moment().format("YYYY-MM-DD")}
                           />
                           <SelectField
                             id={`pets.${index}.next_appt_reason`}
                             name={`pets.${index}.next_appt_reason`}
-                            placeholder="Choose Next Appointment Reason"
+                            placeholder="Next Appointment Reason"
                             options={reasons.map((reason) => {
                               return {
                                 id: reason.id,
@@ -383,7 +383,7 @@ export default function FillUpAppointmentForm({
                           />
                           <button
                             type="button"
-                            className="btn btn-primary btn-xs btn-outline border-dashed border-2"
+                            className="btn btn-error btn-xs btn-outline border-dashed border-2"
                             onClick={() => {
                               setHasNextAppointment((hasNextAppointment) => {
                                 return hasNextAppointment.filter(
