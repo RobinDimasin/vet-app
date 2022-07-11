@@ -18,7 +18,7 @@ export default function Dashboard({
   newRecordForm,
   newRecordButtonLabel = null,
   noRecordLabel = "No records found",
-  defaultCategory = "data",
+  categories = { data: (d) => d },
 }) {
   const queryClient = useQueryClient();
 
@@ -28,46 +28,30 @@ export default function Dashboard({
 
   const [selectedCatergory, setSelectedCategory] = useState();
 
-  const { data: rawData = {}, isLoading: isDataLoading } = useQuery(
+  const { data: rawData = [], isLoading: isDataLoading } = useQuery(
     account && id,
-    async () => {
-      const data = await getData(account);
-
-      if (Array.isArray(data)) {
-        return {
-          [defaultCategory]: data,
-        };
-      }
-
-      return data;
-    }
+    async () => await getData(account)
   );
 
-  const categories = useMemo(() => {
-    const keys = Object.keys(rawData);
-
-    if (keys.length >= 1) {
-      if (defaultCategory in keys) {
-        setSelectedCategory(defaultCategory);
-      } else {
-        setSelectedCategory(keys[0]);
-      }
+  const selectedCategoryFunction = useMemo(() => {
+    if (Object.keys(categories).length === 0) {
+      return (data) => data;
     }
 
-    return keys;
-  }, [rawData, defaultCategory]);
+    if (!Object.keys(categories).includes(selectedCatergory)) {
+      return categories[Object.keys(categories)[0]];
+    }
+
+    return categories[selectedCatergory];
+  }, [categories, selectedCatergory]);
 
   const selectedData = useMemo(() => {
-    if (categories.length === 0) {
+    if (selectedCategoryFunction) {
+      return rawData.filter(selectedCategoryFunction);
+    } else {
       return [];
     }
-
-    if (!categories.includes(selectedCatergory)) {
-      return rawData[categories[0]];
-    }
-
-    return rawData[selectedCatergory];
-  }, [rawData, selectedCatergory, categories]);
+  }, [rawData, selectedCategoryFunction]);
 
   return !isAccountLoading ? (
     <div className="px-[10%]">
@@ -110,10 +94,10 @@ export default function Dashboard({
           </div>
         </div>
       </div>
-      {categories.length > 1 ? (
+      {Object.keys(categories).length > 1 ? (
         <div className="card card-compact bg-base-100 shadow-xl mb-4">
           <div className="card-body block !p-2 space-x-2">
-            {categories.map((category) => {
+            {Object.keys(categories).map((category) => {
               return (
                 <button
                   className={`btn btn-xs btn-ghost ${

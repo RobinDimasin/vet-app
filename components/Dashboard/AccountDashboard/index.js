@@ -144,6 +144,11 @@ export default function AccountDashboard({ ...props }) {
       accountType="admin"
       dataComponent={<AccountInfo />}
       noRecordLabel="No accounts found"
+      categories={{
+        owner: (account) => account.account_type === "owner",
+        veterinarian: (account) => account.account_type === "veterinarian",
+        admin: (account) => account.account_type === "admin",
+      }}
       getData={async () => {
         const response = await makeApiPostRequest(
           "/api/account/getAll?type=owner&type=veterinarian&type=admin"
@@ -151,25 +156,10 @@ export default function AccountDashboard({ ...props }) {
 
         if (response.status === 200 && response.data.status === "OK") {
           const accounts = response.data.data;
-
-          return {
-            owner: accounts.filter(
-              (account) => account.account_type === "owner"
-            ),
-            veterinarian: accounts.filter(
-              (account) => account.account_type === "veterinarian"
-            ),
-            admin: accounts.filter(
-              (account) => account.account_type === "admin"
-            ),
-          };
+          return accounts;
         }
 
-        return {
-          owner: [],
-          veterinarian: [],
-          admin: [],
-        };
+        return [];
       }}
       {...props}
     />

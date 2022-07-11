@@ -333,22 +333,26 @@ const formatAppointmentsResponse = (response) => {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       });
 
-    const unfulfilled = forms.filter((form) => !form.fulfilled);
-    const now = moment().format("YYYY-MM-DD");
-
-    return {
-      pending: unfulfilled.filter(
-        (form) =>
-          !moment(moment(form.date).format("YYYY-MM-DD")).isBefore(now, "day")
-      ),
-      completed: forms.filter((form) => form.fulfilled),
-      overdue: unfulfilled.filter((form) =>
-        moment(moment(form.date).format("YYYY-MM-DD")).isBefore(now, "day")
-      ),
-    };
+    return forms;
   }
 
   return [];
+};
+
+const categories = {
+  pending: (form) =>
+    !form.fulfilled &&
+    !moment(moment(form.date).format("YYYY-MM-DD")).isBefore(
+      moment().format("YYYY-MM-DD"),
+      "day"
+    ),
+  completed: (form) => form.fulfilled,
+  overdue: (form) =>
+    !form.fulfilled &&
+    moment(moment(form.date).format("YYYY-MM-DD")).isBefore(
+      moment().format("YYYY-MM-DD"),
+      "day"
+    ),
 };
 
 const OwnerAppointmentDashboard = (props) => {
@@ -362,6 +366,7 @@ const OwnerAppointmentDashboard = (props) => {
       newRecordForm={<NewAppointmentForm />}
       newRecordButtonLabel="Make an Appointment"
       noRecordLabel="No appointments found"
+      categories={categories}
       getData={async ({ id }) => {
         const response = await makeApiPostRequest(
           "/api/account/owner/getAppointments",
@@ -386,6 +391,7 @@ const AdminAppointmentDashboard = (props) => {
       accountType="admin"
       dataComponent={<AppointmentInfo showOwner={true} showEdit={false} />}
       noRecordLabel="No appointments found"
+      categories={categories}
       getData={async () => {
         const response = await makeApiPostRequest("/api/appointment/getAll");
 
@@ -411,6 +417,7 @@ const VeterinarianAppointmentDashboard = (props) => {
           showFillUp={true}
         />
       }
+      categories={categories}
       noRecordLabel="No appointments found"
       getData={async () => {
         const response = await makeApiPostRequest("/api/appointment/getAll");
