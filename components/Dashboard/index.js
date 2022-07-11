@@ -78,14 +78,7 @@ export default function Dashboard({
                   form={React.cloneElement(newRecordForm)}
                   onSuccess={(newData) => {
                     queryClient.setQueryData(id, (oldData) => {
-                      const category = categories.includes(selectedCatergory)
-                        ? selectedCatergory
-                        : categories[0];
-
-                      return {
-                        ...oldData,
-                        [category]: [newData, ...oldData[category]],
-                      };
+                      return [newData, ...oldData];
                     });
                   }}
                 />
@@ -130,15 +123,9 @@ export default function Dashboard({
                 data: { ...d, index: index + 1 },
                 onDelete: () => {
                   queryClient.setQueryData(id, (oldData) => {
-                    const newData = {};
-
-                    for (const category of categories) {
-                      newData[category] = oldData[category].filter(
-                        (item) => keyFunc(item) !== keyFunc(d)
-                      );
-                    }
-
-                    return newData;
+                    return oldData.filter(
+                      (item) => keyFunc(item) !== keyFunc(d)
+                    );
                   });
                 },
               })
