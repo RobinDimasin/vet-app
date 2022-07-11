@@ -13,6 +13,10 @@ export const makeApiGetRequest = async (url, options = {}) => {
 };
 
 export const getValueFromObject = (obj, key) => {
+  if (!key) {
+    return null;
+  }
+
   const keys = key.split(".");
 
   if (!obj) {
@@ -73,4 +77,8 @@ export const makeProperty = (key, obj, format = {}) => {
         : obj[key]}
     </p>
   ) : null;
+};
+
+export const makeName = ({ first_name, last_name, middle_name }) => {
+  return `${last_name}, ${first_name}${middle_name ? " " + middle_name : ""}`;
 };

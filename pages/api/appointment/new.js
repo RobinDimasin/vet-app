@@ -33,7 +33,14 @@ export default withAccount(
       if (okay) {
         return res.status(200).json({
           status: STATUS.OK,
-          data: response.map((r) => r.data),
+          data: response.map((r) => {
+            return r.data.map((d) => {
+              return {
+                ...d,
+                owner_id: r.owner_id,
+              };
+            });
+          }),
         });
       } else {
         return res.status(500).json({
