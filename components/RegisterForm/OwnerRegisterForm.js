@@ -120,13 +120,19 @@ export default function OwnerRegisterForm() {
       <TextInputField id="email" type="email" placeholder="Email Address" />
       <TextInputField id="username" placeholder="Username" />
       <div className="grid grid-flow-row grid-cols-3 gap-4">
-        <TextInputField id="last_name" placeholder="Last Name" />
-        <TextInputField id="first_name" placeholder="First Name" />
-        <TextInputField
-          id="middle_name"
-          placeholder="Middle Name"
-          required={false}
-        />
+        <div>
+          <TextInputField id="last_name" placeholder="Last Name" />
+        </div>
+        <div>
+          <TextInputField id="first_name" placeholder="First Name" />
+        </div>
+        <div>
+          <TextInputField
+            id="middle_name"
+            placeholder="Middle Name"
+            required={false}
+          />
+        </div>
       </div>
       <TextInputField id="address" placeholder="Address" />
       <TextInputField

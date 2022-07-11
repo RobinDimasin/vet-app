@@ -118,8 +118,12 @@ export default function EditPetForm({
       />
 
       <div className="grid grid-flow-row grid-cols-2 gap-4">
-        <TextInputField id="breed" type="text" placeholder="Breed" />
-        <TextInputField id="species" type="text" placeholder="Species" />
+        <div>
+          <TextInputField id="breed" type="text" placeholder="Breed" />
+        </div>
+        <div>
+          <TextInputField id="species" type="text" placeholder="Species" />
+        </div>
       </div>
       <TextAreaField
         id="description"
