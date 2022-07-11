@@ -1,5 +1,6 @@
 import Footer from "@components/Footer/Footer";
 import NavigationBar from "@components/NavigationBar/NavigationBar";
+import Link from "next/link";
 
 const Rating = () => {
   return (
@@ -37,7 +38,7 @@ const Rating = () => {
 export default function Home() {
   return (
     <>
-      <div className="hero pb-56 pt-12">
+      <div className="hero h-auto pt-12">
         <div className="hero-content md:px-[5%]">
           <div className="text-center lg:text-start">
             <h1 className="text-5xl font-bold">Vetreatment: Pet Clinic</h1>
@@ -46,7 +47,11 @@ export default function Home() {
               treatments, diagnoses, vaccinations, deworming, general health
               care, and animal observation.
             </p>
-            <button className="btn btn-accent">Make An Appointment Now!</button>
+            <Link href={"/appointments"}>
+              <button className="btn btn-accent">
+                Make An Appointment Now!
+              </button>
+            </Link>
           </div>
           <img
             src="/image/dog3.png"
@@ -55,7 +60,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="hero min-h-screen bg-base-200">
+      {/* <div className="hero min-h-screen bg-base-200">
         <div className="card w-[80%] glass -top-[200px]">
           <div className="card-body">
             <h2 className="card-title">Appointment</h2>
@@ -69,7 +74,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* 
       <div className="from-accent to-primary bg-gradient-to-br">
         <div className="hero-content flex-col lg:flex-row-reverse md:px-[10%]">
@@ -85,7 +90,7 @@ export default function Home() {
         </div>
       </div> */}
 
-      <div className="hero from-primary to-accent text-primary-content min-h-screen bg-gradient-to-br">
+      {/* <div className="hero from-primary to-accent text-primary-content min-h-screen bg-gradient-to-br">
         <div className="hero-content mx-auto max-w-md text-center md:max-w-full">
           <div>
             <h2 className="mt-20 mb-2 text-4xl font-extrabold md:text-6xl mb-16">
@@ -140,7 +145,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
