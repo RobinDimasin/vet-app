@@ -104,11 +104,9 @@ function AppointmentPetBriefInfo({ appointmentPet }) {
               {makeProperty("description", appointmentPet, {
                 key: () => reasonName,
               })}
-              <br />
               {makeProperty("weight", appointmentPet)}
               {makeProperty("temperature", appointmentPet)}
               {makeProperty("prescription", appointmentPet)}
-              <br />
               {veterinarian ? (
                 <>
                   <b>Processed by: </b>
