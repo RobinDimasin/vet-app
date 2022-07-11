@@ -24,6 +24,7 @@ import useAccount from "@components/hooks/useAccount";
 import Modal from "@components/Modal";
 import NewPetForm from "@components/PetForm/NewPetForm";
 import FormModal from "@components/Modal/FormModal";
+import moment from "moment";
 
 export default function NewAppointmentForm({
   values = {
@@ -75,7 +76,9 @@ export default function NewAppointmentForm({
   const formik = useFormik({
     initialValues: values,
     validationSchema: Yup.object({
-      date: Yup.date().required("Required"),
+      date: Yup.date()
+        .min(moment().format("YYYY-MM-DD"), "Date cannot be from the past")
+        .required("Required"),
       pets: Yup.array()
         .of(
           Yup.object({
@@ -145,7 +148,11 @@ export default function NewAppointmentForm({
         }
         {...props}
       >
-        <DateField id="date" placeholder="Choose a date" />
+        <DateField
+          id="date"
+          placeholder="Choose a date"
+          min={moment().format("YYYY-MM-DD")}
+        />
         <FieldArray name="pets">
           {({ insert, remove, push }) => (
             <div>
