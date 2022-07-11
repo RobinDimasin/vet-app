@@ -30,7 +30,7 @@ export default function FormModal({
             left: "50%",
             right: "auto",
             bottom: "auto",
-            transform: "translate(-50%, 0)",
+            transform: "translate(-50%, 2.5%)",
             border: "none",
             paddingBottom: "40px",
             backgroundColor: "transparent",

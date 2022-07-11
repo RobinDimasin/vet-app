@@ -17,7 +17,8 @@ function MyApp({ Component, pageProps }) {
         <QueryClientProvider client={queryClient}>
           <ModalProvider>
             <AccountProvider>
-              <div className="from-primary to-base-100 bg-gradient-to-r min-h-screen">
+              {/* <div className="from-primary to-base-100 bg-gradient-to-r min-h-screen"> */}
+              <div className="bg-base-300 min-h-screen">
                 <NavigationBar />
                 <Component {...pageProps} />
               </div>

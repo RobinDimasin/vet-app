@@ -34,7 +34,7 @@ export default function Modal({ trigger, children }) {
             left: "50%",
             right: "auto",
             bottom: "auto",
-            transform: "translate(-50%, 0)",
+            transform: "translate(-50%, 2.5%)",
             border: "none",
             paddingBottom: "40px",
             backgroundColor: "transparent",

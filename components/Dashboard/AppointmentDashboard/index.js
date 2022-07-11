@@ -170,136 +170,128 @@ function AppointmentInfo({
   );
 
   return (
-    <div className="break-inside card card-compact bg-base-100 shadow-xl">
-      <div className="card-body">
-        <div>
-          <h2 className="card-title text-ellipsis font-bold">
-            {moment(appointment.date).format("MMMM Do YYYY")}
-            {appointment.fulfilled ? (
-              <span className="badge badge-success badge-sm">COMPLETED</span>
-            ) : !moment(moment(appointment.date).format("YYYY-MM-DD")).isBefore(
-                moment().format("YYYY-MM-DD"),
-                "day"
-              ) ? (
-              <span className="badge badge-info badge-sm">PENDING</span>
-            ) : (
-              <span className="badge badge-error badge-sm">OVERDUE</span>
-            )}
-          </h2>
-          {showOwner ? (
-            <>
-              <b>Owner:</b>{" "}
-              {owner ? (
-                <Modal trigger={<span className="link">{owner.email}</span>}>
-                  <AccountMoreInfo
-                    account={{
-                      ...owner,
-                      id: owner.account_id,
-                    }}
-                    doFetch={true}
-                  />
-                </Modal>
-              ) : (
-                "Loading..."
-              )}
-            </>
-          ) : null}
-          <div className="space-y-2">
-            {appointment.pets.map((pet) => {
-              return (
-                <AppointmentPetBriefInfo
-                  key={pet.pet_id}
-                  appointmentPet={pet}
-                />
-              );
-            })}
-          </div>
-        </div>
-        <div
-          className={`grid grid-cols-${
-            showDelete + showEdit
-          } gap-4 drop-shadow`}
-        >
-          {!appointment.fulfilled && showEdit && (
-            <FormModal
-              trigger={
-                <button className="btn btn-success btn-sm">
-                  <Icon icon={<EditIcon />} />
-                  Edit
-                </button>
-              }
-              form={
-                <EditAppointmentForm
-                  id={appointment.form_id}
-                  values={{
-                    ...appointment,
-                    date: moment(appointment.date).format("YYYY-MM-DD"),
+    <>
+      <div>
+        <h2 className="card-title text-ellipsis font-bold">
+          {moment(appointment.date).format("MMMM Do YYYY")}
+          {appointment.fulfilled ? (
+            <span className="badge badge-success badge-sm">COMPLETED</span>
+          ) : !moment(moment(appointment.date).format("YYYY-MM-DD")).isBefore(
+              moment().format("YYYY-MM-DD"),
+              "day"
+            ) ? (
+            <span className="badge bg-gray-400 border-none badge-sm">
+              PENDING
+            </span>
+          ) : (
+            <span className="badge badge-error badge-sm">OVERDUE</span>
+          )}
+        </h2>
+        {showOwner ? (
+          <>
+            <b>Owner:</b>{" "}
+            {owner ? (
+              <Modal trigger={<span className="link">{owner.email}</span>}>
+                <AccountMoreInfo
+                  account={{
+                    ...owner,
+                    id: owner.account_id,
                   }}
+                  doFetch={true}
                 />
-              }
-              onSuccess={(appointment) => {
-                setAppointment(appointment);
-                // queryClient.invalidateQueries(id);
-              }}
-            />
-          )}
-          {!appointment.fulfilled && showDelete && (
-            <button
-              className={`btn btn-error btn-sm drop-shadow ${
-                deleting ? "loading btn-disabled" : ""
-              }`}
-              onClick={async () => {
-                if (deletionConfirming) {
-                  setDeleting(true);
-                  const response = await makeApiPostRequest(
-                    "/api/appointment/delete",
-                    {
-                      id: appointment.form_id,
-                    }
-                  );
-
-                  if (
-                    response.status === 200 &&
-                    response.data.status === "OK"
-                  ) {
-                    onDelete(appointment);
-                  }
-                  setDeleting(false);
-                  setDeletionConfirming(false);
-                } else {
-                  setDeletionConfirming(true);
-                }
-              }}
-            >
-              {deleting ? (
-                "Deleting..."
-              ) : !deletionConfirming ? (
-                <>
-                  <Icon icon={<DeleteIcon />} />
-                  Delete
-                </>
-              ) : (
-                "Are you sure?"
-              )}
-            </button>
-          )}
+              </Modal>
+            ) : (
+              "Loading..."
+            )}
+          </>
+        ) : null}
+        <div className="space-y-2">
+          {appointment.pets.map((pet) => {
+            return (
+              <AppointmentPetBriefInfo key={pet.pet_id} appointmentPet={pet} />
+            );
+          })}
         </div>
-        {!appointment.fulfilled && showFillUp && (
+      </div>
+      <div
+        className={`grid grid-cols-${showDelete + showEdit} gap-4 drop-shadow`}
+      >
+        {!appointment.fulfilled && showEdit && (
           <FormModal
             trigger={
-              <button className="btn btn-accent btn-sm">
-                <Icon icon={<PencilIcon />} /> Fill Up
+              <button className="btn btn-success btn-sm">
+                <Icon icon={<EditIcon />} />
+                Edit
               </button>
             }
-            form={<FillUpAppointmentForm id={appointment.form_id} />}
+            form={
+              <EditAppointmentForm
+                id={appointment.form_id}
+                values={{
+                  ...appointment,
+                  date: moment(appointment.date).format("YYYY-MM-DD"),
+                }}
+              />
+            }
             onSuccess={(appointment) => {
               setAppointment(appointment);
               // queryClient.invalidateQueries(id);
             }}
           />
         )}
+        {!appointment.fulfilled && showDelete && (
+          <button
+            className={`btn btn-error btn-sm drop-shadow ${
+              deleting ? "loading btn-disabled" : ""
+            }`}
+            onClick={async () => {
+              if (deletionConfirming) {
+                setDeleting(true);
+                const response = await makeApiPostRequest(
+                  "/api/appointment/delete",
+                  {
+                    id: appointment.form_id,
+                  }
+                );
+
+                if (response.status === 200 && response.data.status === "OK") {
+                  onDelete(appointment);
+                }
+                setDeleting(false);
+                setDeletionConfirming(false);
+              } else {
+                setDeletionConfirming(true);
+              }
+            }}
+          >
+            {deleting ? (
+              "Deleting..."
+            ) : !deletionConfirming ? (
+              <>
+                <Icon icon={<DeleteIcon />} />
+                Delete
+              </>
+            ) : (
+              "Are you sure?"
+            )}
+          </button>
+        )}
       </div>
-    </div>
+      {!appointment.fulfilled && showFillUp && (
+        <FormModal
+          trigger={
+            <button className="btn btn-accent btn-sm">
+              <Icon icon={<PencilIcon />} /> Fill Up
+            </button>
+          }
+          form={<FillUpAppointmentForm id={appointment.form_id} />}
+          onSuccess={(appointment) => {
+            setAppointment(appointment);
+            // queryClient.invalidateQueries(id);
+          }}
+        />
+      )}
+    </>
   );
 }
 

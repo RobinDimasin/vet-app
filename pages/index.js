@@ -48,7 +48,7 @@ export default function Home() {
               care, and animal observation.
             </p>
             <Link href={"/appointments"}>
-              <button className="btn btn-accent">
+              <button className="btn btn-primary">
                 Make An Appointment Now!
               </button>
             </Link>

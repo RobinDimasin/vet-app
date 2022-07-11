@@ -1,1 +1,1 @@
-export const THEME = "cupcake";
+export const THEME = "mytheme";

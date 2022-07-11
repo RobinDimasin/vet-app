@@ -14,63 +14,58 @@ function ReasonInfo({ data: _reason, onDelete = () => {} }) {
   const [deletionConfirming, setDeletionConfirming] = useState(false);
 
   return (
-    <div className="break-inside card card-compact bg-base-100 shadow-xl">
-      <div className="card-body">
-        <div>
-          <h2 className="card-title text-ellipsis font-bold">{reason.id}</h2>
-          {reason.reason}
-        </div>
-        <div className="grid grid-cols-2 gap-4 drop-shadow">
-          <FormModal
-            trigger={
-              <button className="btn btn-success btn-sm">
-                <Icon icon={<EditIcon />} />
-                Edit
-              </button>
-            }
-            form={<EditReasonForm id={reason.id} values={reason} />}
-            onSuccess={(reason) => {
-              setReason(reason);
-            }}
-          />
-          <button
-            className={`btn btn-error btn-sm drop-shadow ${
-              deleting ? "loading btn-disabled" : ""
-            }`}
-            onClick={async () => {
-              if (deletionConfirming) {
-                setDeleting(true);
-                const response = await makeApiPostRequest(
-                  "/api/reason/delete",
-                  {
-                    id: reason.id,
-                  }
-                );
-
-                if (response.status === 200 && response.data.status === "OK") {
-                  onDelete(reason);
-                }
-                setDeleting(false);
-                setDeletionConfirming(false);
-              } else {
-                setDeletionConfirming(true);
-              }
-            }}
-          >
-            {deleting ? (
-              "Deleting..."
-            ) : !deletionConfirming ? (
-              <>
-                <Icon icon={<DeleteIcon />} />
-                Delete
-              </>
-            ) : (
-              "Are you sure?"
-            )}
-          </button>
-        </div>
+    <>
+      <div>
+        <h2 className="card-title text-ellipsis font-bold">{reason.id}</h2>
+        {reason.reason}
       </div>
-    </div>
+      <div className="grid grid-cols-2 gap-4 drop-shadow">
+        <FormModal
+          trigger={
+            <button className="btn btn-success btn-sm">
+              <Icon icon={<EditIcon />} />
+              Edit
+            </button>
+          }
+          form={<EditReasonForm id={reason.id} values={reason} />}
+          onSuccess={(reason) => {
+            setReason(reason);
+          }}
+        />
+        <button
+          className={`btn btn-error btn-sm drop-shadow ${
+            deleting ? "loading btn-disabled" : ""
+          }`}
+          onClick={async () => {
+            if (deletionConfirming) {
+              setDeleting(true);
+              const response = await makeApiPostRequest("/api/reason/delete", {
+                id: reason.id,
+              });
+
+              if (response.status === 200 && response.data.status === "OK") {
+                onDelete(reason);
+              }
+              setDeleting(false);
+              setDeletionConfirming(false);
+            } else {
+              setDeletionConfirming(true);
+            }
+          }}
+        >
+          {deleting ? (
+            "Deleting..."
+          ) : !deletionConfirming ? (
+            <>
+              <Icon icon={<DeleteIcon />} />
+              Delete
+            </>
+          ) : (
+            "Are you sure?"
+          )}
+        </button>
+      </div>
+    </>
   );
 }
 
