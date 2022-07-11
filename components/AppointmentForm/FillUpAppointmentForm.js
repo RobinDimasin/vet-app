@@ -251,14 +251,14 @@ export default function FillUpAppointmentForm({
                           <NumberInputField
                             id={`pets.${index}.weight`}
                             name={`pets.${index}.weight`}
-                            placeholder="weight"
+                            placeholder="Weight"
                           />
                         </div>
                         <div>
                           <NumberInputField
                             id={`pets.${index}.temperature`}
                             name={`pets.${index}.temperature`}
-                            placeholder="temperature"
+                            placeholder="Temperature"
                           />
                         </div>
                       </div>
