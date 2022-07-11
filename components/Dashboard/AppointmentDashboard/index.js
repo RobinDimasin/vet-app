@@ -177,8 +177,13 @@ function AppointmentInfo({
             {moment(appointment.date).format("MMMM Do YYYY")}
             {appointment.fulfilled ? (
               <span className="badge badge-success badge-sm">COMPLETED</span>
-            ) : (
+            ) : !moment(moment(appointment.date).format("YYYY-MM-DD")).isBefore(
+                moment().format("YYYY-MM-DD"),
+                "day"
+              ) ? (
               <span className="badge badge-info badge-sm">PENDING</span>
+            ) : (
+              <span className="badge badge-error badge-sm">OVERDUE</span>
             )}
           </h2>
           {showOwner ? (
@@ -328,9 +333,18 @@ const formatAppointmentsResponse = (response) => {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       });
 
+    const unfulfilled = forms.filter((form) => !form.fulfilled);
+    const now = moment().format("YYYY-MM-DD");
+
     return {
-      pending: forms.filter((form) => !form.fulfilled),
+      pending: unfulfilled.filter(
+        (form) =>
+          !moment(moment(form.date).format("YYYY-MM-DD")).isBefore(now, "day")
+      ),
       completed: forms.filter((form) => form.fulfilled),
+      overdue: unfulfilled.filter((form) =>
+        moment(moment(form.date).format("YYYY-MM-DD")).isBefore(now, "day")
+      ),
     };
   }
 
