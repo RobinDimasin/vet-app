@@ -151,7 +151,7 @@ function AppointmentInfo({
   const [deletionConfirming, setDeletionConfirming] = useState(false);
 
   const { data: owner } = useQuery(
-    showOwner && appointment.owner_id,
+    showOwner && appointment && appointment.owner_id,
     async () => {
       const response = await makeApiPostRequest(
         "/api/account/getAccountDetailsOf",

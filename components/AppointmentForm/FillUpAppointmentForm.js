@@ -186,11 +186,64 @@ export default function FillUpAppointmentForm({
         if (response.status === 200 && response.data.status === "OK") {
           resetForm();
 
-          const appointments = response.data.data;
+          const { updatedFormAppointments, newAppointments } =
+            response.data.data;
 
-          queryClient.resetQueries("veterinarian_appointments");
+          const updatedForm = {
+            form_id: updatedFormAppointments[0].form_id,
+            date: updatedFormAppointments[0].appt_date,
+            owner_id: updatedFormAppointments[0].owner_id,
+            pets: updatedFormAppointments.map((appointment) => {
+              return {
+                pet_id: appointment.pet_id,
+                reason: appointment.reason_id,
+                description: appointment.reason_desc,
+              };
+            }),
+          };
 
-          onSuccess();
+          onSuccess(updatedForm);
+
+          queryClient.setQueriesData(
+            "veterinarian_appointments",
+            (oldForms) => {
+              const withUpdatedForm = [
+                updatedForm,
+                ...oldForms.filter(
+                  (form) => form.form_id !== updatedFormAppointments.form_id
+                ),
+              ];
+
+              const newFormsFormatted = newAppointments
+                .map((appointments) => {
+                  if (appointments.length == 0) {
+                    return null;
+                  }
+
+                  return {
+                    form_id: appointments[0].form_id,
+                    date: appointments[0].appt_date,
+                    owner_id: appointments[0].owner_id,
+                    fulfilled: appointments.some(
+                      (appointment) => appointment.veterinarian_license_no
+                    ),
+                    pets: appointments.map((appointment) => {
+                      return {
+                        ...appointment,
+                        pet_id: appointment.pet_id,
+                        reason: appointment.reason_id,
+                        description: appointment.reason_desc,
+                      };
+                    }),
+                  };
+                })
+                .filter((form) => form);
+
+              return [...newFormsFormatted, ...withUpdatedForm].sort((a, b) => {
+                return new Date(a.date).getTime() - new Date(b.date).getTime();
+              });
+            }
+          );
         } else {
           onError();
         }

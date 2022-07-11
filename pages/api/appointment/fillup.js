@@ -79,7 +79,7 @@ export default withAccount(
         groupBy(petsWithNextAppt, (pet) => pet.next_appt_date)
       );
 
-      const r = await Promise.all(
+      const responseNewForms = await Promise.all(
         petsWithSameDateAppt.map(async (pets) => {
           return await newAppointment({
             date: pets[0].next_appt_date,
@@ -100,12 +100,15 @@ export default withAccount(
       if (response.status === STATUS.OK) {
         return res.status(200).json({
           status: STATUS.OK,
-          data: response.data.map((d) => {
-            return {
-              ...d,
-              owner_id: form.owner_id,
-            };
-          }),
+          data: {
+            updatedFormAppointments: response.data.map((d) => {
+              return {
+                ...d,
+                owner_id: form.owner_id,
+              };
+            }),
+            newAppointments: responseNewForms.map((r) => r.data),
+          },
         });
       } else {
         return res.status(500).json(response);
