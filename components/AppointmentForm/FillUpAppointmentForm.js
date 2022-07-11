@@ -38,9 +38,10 @@ export default function FillUpAppointmentForm({
   });
 
   const [error, setError] = useState();
+  const [hasNextAppointment, setHasNextAppointment] = useState([]);
 
   const fillUpAppointment = useMutation(async ({ date, pets }) => {
-    return await makeApiPostRequest("/api/appointment/edit", {
+    return await makeApiPostRequest("/api/appointment/fillup", {
       id,
       date,
       pets,
@@ -79,6 +80,18 @@ export default function FillUpAppointmentForm({
     }
   );
 
+  const { data: reasons = [], isLoading: isReasonsLoading } = useQuery(
+    account && "get_reasons",
+    async () => {
+      const response = await makeApiPostRequest("/api/entity/reason/getAll");
+      if (response.status === 200 && response.data.status === "OK") {
+        return response.data.data;
+      }
+
+      return [];
+    }
+  );
+
   const { data: pets = [], isLoading: isPetsLoading } = useQuery(
     appointment && "get_pets",
     async () => {
@@ -100,7 +113,14 @@ export default function FillUpAppointmentForm({
           veterinarian_name: makeName(account),
           veterinarian_license_no: account.license_no,
           date: moment(appointment.date).format("YYYY-MM-DD"),
-          pets: appointment.pets,
+          pets: appointment.pets.map((pet) => {
+            return {
+              ...pet,
+              next_appt_date: null,
+              next_appt_reason: null,
+              next_appt_description: null,
+            };
+          }),
         }
       : {
           veterinarian_name: "",
@@ -130,8 +150,13 @@ export default function FillUpAppointmentForm({
               .typeError("Must be a string")
               .required("Required"),
             veterinarian_license_no: Yup.string()
-              .max(64, "Must be 512 characters or less")
+              .max(64, "Must be 64 characters or less")
               .required("Required"),
+            next_appt_date: Yup.date().nullable(),
+            next_appt_reason: Yup.string().nullable(),
+            next_appt_description: Yup.string()
+              .max(512, "Must be 512 characters or less")
+              .nullable(),
           })
         )
         .min(1, "Must have at least one pet"),
@@ -147,6 +172,13 @@ export default function FillUpAppointmentForm({
               pet_id: pet.pet_id,
               reason_id: pet.reason,
               reason_desc: pet.description,
+              ...(!hasNextAppointment.includes(pet.pet_id)
+                ? {
+                    next_appt_date: null,
+                    next_appt_reason: null,
+                    next_appt_description: null,
+                  }
+                : {}),
             };
           }),
         });
@@ -267,6 +299,58 @@ export default function FillUpAppointmentForm({
                         name={`pets.${index}.prescription`}
                         placeholder="Prescription"
                       />
+                      {!hasNextAppointment.includes(pet.pet_id) ? (
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-xs btn-outline border-dashed border-2"
+                          onClick={() => {
+                            setHasNextAppointment((hasNextAppointment) => {
+                              return [...hasNextAppointment, pet.pet_id];
+                            });
+                          }}
+                        >
+                          Setup Next Appointment
+                        </button>
+                      ) : (
+                        <>
+                          <br />
+                          <DateField
+                            id={`pets.${index}.next_appt_date`}
+                            placeholder="Choose Next Appointment Date"
+                            min={moment().format("YYYY-MM-DD")}
+                          />
+                          <SelectField
+                            id={`pets.${index}.next_appt_reason`}
+                            name={`pets.${index}.next_appt_reason`}
+                            placeholder="Choose Next Appointment Reason"
+                            options={reasons.map((reason) => {
+                              return {
+                                id: reason.id,
+                                value: reason.id,
+                                label: reason.reason,
+                              };
+                            })}
+                          />
+                          <TextAreaField
+                            id={`pets.${index}.next_appt_description`}
+                            name={`pets.${index}.next_appt_description`}
+                            placeholder="Next Appointment Description"
+                          />
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-xs btn-outline border-dashed border-2"
+                            onClick={() => {
+                              setHasNextAppointment((hasNextAppointment) => {
+                                return hasNextAppointment.filter(
+                                  (id) => id !== pet.pet_id
+                                );
+                              });
+                            }}
+                          >
+                            Remove Next Appointment
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ))}
