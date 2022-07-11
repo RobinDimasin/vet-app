@@ -110,19 +110,17 @@ export default function FillUpAppointmentForm({
     enableReinitialize: true,
     initialValues: appointment
       ? {
-          veterinarian_name: "Vet name: " + makeName(account),
+          veterinarian_name: makeName(account),
           veterinarian_license_no: account.license_no,
-          veterinarian_license_no_label: "License No.: " + account.license_no,
+          veterinarian_license_no_label: account.license_no,
           date: moment(appointment.date).format("YYYY-MM-DD"),
-          date_label:
-            "Date: " + moment(appointment.appt_date).format("YYYY-MM-DD"),
+          date_label: moment(appointment.appt_date).format("YYYY-MM-DD"),
           pets: appointment.pets.map((pet) => {
             return {
               ...pet,
-              reason_label:
-                "Reason: " +
-                reasons.find((reason) => reason.id === pet.reason).reason,
-              description_label: "Description: " + pet.description,
+              reason_label: reasons.find((reason) => reason.id === pet.reason)
+                .reason,
+              description_label: pet.description,
               next_appt_date: null,
               next_appt_reason: null,
               next_appt_description: null,

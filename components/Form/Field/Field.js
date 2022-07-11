@@ -8,6 +8,7 @@ export default function Field({
   required,
   valueMap = (v) => v,
   as,
+  placeholder,
   ...props
 }) {
   const [error, setError] = useState();
@@ -24,8 +25,9 @@ export default function Field({
   return (
     <>
       {formik ? (
-        <>
+        <div className="my_input mt-2">
           {createElement(as, {
+            placeholder,
             ...props,
             ...formik.getFieldProps(id),
             onBlur: (...args) => {
@@ -39,8 +41,10 @@ export default function Field({
               props.className ?? "",
               error ? `${as}-error` : "",
               required ? `${as}-primary` : "",
+              "my_input__field",
             ].join(" "),
           })}
+          <div className="my_input__label">{placeholder}</div>
           {error || label ? (
             <>
               <label className="label py-0 space-y-0">
@@ -49,7 +53,7 @@ export default function Field({
               </label>
             </>
           ) : null}
-        </>
+        </div>
       ) : null}
     </>
   );
