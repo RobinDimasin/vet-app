@@ -96,10 +96,7 @@ export default function Dashboard({
                     queryClient.setQueryData(id, (oldData) => {
                       return {
                         ...oldData,
-                        [defaultCategory]: [
-                          newData,
-                          ...oldData[defaultCategory],
-                        ],
+                        [category]: [newData, ...oldData[category]],
                       };
                     });
                   }}
