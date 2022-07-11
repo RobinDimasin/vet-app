@@ -390,7 +390,12 @@ const VeterinarianAppointmentDashboard = (props) => {
       name="Appointments"
       accountType="veterinarian"
       dataComponent={
-        <AppointmentInfo showOwner={true} showEdit={false} showFillUp={true} />
+        <AppointmentInfo
+          showOwner={true}
+          showEdit={false}
+          showDelete={false}
+          showFillUp={true}
+        />
       }
       noRecordLabel="No appointments found"
       getData={async () => {
