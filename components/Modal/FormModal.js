@@ -39,7 +39,9 @@ export default function FormModal({
         contentLabel="Example Modal"
       >
         <div data-theme={THEME}>
-          <div className={`card bg-base-100 shadow-xl ${className}`}>
+          <div
+            className={`card bg-base-100 shadow-xl ${className} max-h-[80vh] overflow-auto`}
+          >
             <div className="card-body card-compact">
               <button
                 onClick={closeModal}

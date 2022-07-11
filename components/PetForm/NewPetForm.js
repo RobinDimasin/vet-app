@@ -126,7 +126,7 @@ export default function NewPetForm({
       <DateField
         id="birthdate"
         placeholder="Birthdate"
-        max={moment(values.date).format("YYYY-MM-DD")}
+        max={moment().format("YYYY-MM-DD")}
       />
     </Form>
   );
