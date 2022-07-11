@@ -44,9 +44,7 @@ function PetInfo({
     <div className="break-inside card card-compact bg-base-100 shadow-xl">
       <div className="card-body">
         <div>
-          <h2 className="card-title text-ellipsis font-bold truncate">
-            {pet.name}
-          </h2>
+          <h2 className="card-title text-ellipsis font-bold">{pet.name}</h2>
           {showOwner ? (
             <>
               <b>Owner:</b>{" "}

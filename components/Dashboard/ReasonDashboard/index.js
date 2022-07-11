@@ -17,9 +17,7 @@ function ReasonInfo({ data: _reason, onDelete = () => {} }) {
     <div className="break-inside card card-compact bg-base-100 shadow-xl">
       <div className="card-body">
         <div>
-          <h2 className="card-title text-ellipsis font-bold truncate">
-            {reason.id}
-          </h2>
+          <h2 className="card-title text-ellipsis font-bold">{reason.id}</h2>
           {reason.reason}
         </div>
         <div className="grid grid-cols-2 gap-4 drop-shadow">

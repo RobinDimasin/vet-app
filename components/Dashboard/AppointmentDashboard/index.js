@@ -173,7 +173,7 @@ function AppointmentInfo({
     <div className="break-inside card card-compact bg-base-100 shadow-xl">
       <div className="card-body">
         <div>
-          <h2 className="card-title text-ellipsis font-bold truncate">
+          <h2 className="card-title text-ellipsis font-bold">
             {moment(appointment.date).format("MMMM Do YYYY")}
             {appointment.fulfilled ? (
               <span className="badge badge-success badge-sm">COMPLETED</span>

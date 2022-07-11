@@ -40,7 +40,7 @@ export function AccountMoreInfo({ account, doFetch = false }) {
   return (
     <>
       <div>
-        <h2 className="card-title text-ellipsis font-bold truncate">
+        <h2 className="card-title text-ellipsis font-bold">
           <span>{moreInfo.username ?? account.username}</span>
           <span className="badge badge-sm">
             {account.account_type.toUpperCase()}
