@@ -109,7 +109,9 @@ export default function FillUpAppointmentForm({
           pets: [],
         },
     validationSchema: Yup.object({
-      date: Yup.date().required("Required"),
+      date: Yup.date()
+        .min(moment().format("YYYY-MM-DD"), "Date cannot be from the past")
+        .required("Required"),
       pets: Yup.array()
         .of(
           Yup.object({
@@ -206,7 +208,12 @@ export default function FillUpAppointmentForm({
             disabled
           />
         </div>
-        <DateField id="date" placeholder="Choose a date" disabled />
+        <DateField
+          id="date"
+          placeholder="Choose a date"
+          min={moment().format("YYYY-MM-DD")}
+          disabled
+        />
 
         <FieldArray name="pets">
           {({ insert, remove, push }) => (
