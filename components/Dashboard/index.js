@@ -93,13 +93,16 @@ export default function Dashboard({
             {Object.keys(categories).map((category) => {
               return (
                 <button
-                  className={`btn btn-xs btn-ghost ${
+                  className={`btn btn-xs btn-ghost space-x-1 ${
                     category === selectedCatergory ? "btn-active" : ""
                   }`}
                   key={category}
                   onClick={() => setSelectedCategory(category)}
                 >
-                  {category}
+                  <p>{category} </p>
+                  <div className="badge bg-base-300 border-none text-black badge-sm">
+                    {rawData.filter(categories[category]).length}
+                  </div>
                 </button>
               );
             })}
