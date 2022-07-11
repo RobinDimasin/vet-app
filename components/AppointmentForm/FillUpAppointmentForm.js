@@ -146,6 +146,7 @@ export default function FillUpAppointmentForm({
               .max(512, "Must be 512 characters or less")
               .required("Required"),
             weight: Yup.number()
+              .min(0, "Must be greater than 0")
               .typeError("Must be a number")
               .required("Required"),
             temperature: Yup.number()
