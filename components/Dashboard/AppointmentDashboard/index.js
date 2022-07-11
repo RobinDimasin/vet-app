@@ -177,7 +177,7 @@ function AppointmentInfo({
         <div>
           <h2 className="card-title text-ellipsis font-bold truncate">
             {moment(appointment.date).format("MMMM Do YYYY")}
-            {!appointment.fulfilled ? (
+            {appointment.fulfilled ? (
               <span className="badge badge-success badge-sm">COMPLETED</span>
             ) : (
               <span className="badge badge-info badge-sm">PENDING</span>
@@ -302,7 +302,7 @@ function AppointmentInfo({
 
 const formatAppointmentsResponse = (response) => {
   if (response.status === 200 && response.data.status === "OK") {
-    return response.data.data
+    const forms = response.data.data
       .map((appointments) => {
         if (appointments.length == 0) {
           return null;
@@ -329,6 +329,11 @@ const formatAppointmentsResponse = (response) => {
       .sort((a, b) => {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       });
+
+    return {
+      pending: forms.filter((form) => !form.fulfilled),
+      completed: forms.filter((form) => form.fulfilled),
+    };
   }
 
   return [];

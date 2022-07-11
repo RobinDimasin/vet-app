@@ -150,10 +150,26 @@ export default function AccountDashboard({ ...props }) {
         );
 
         if (response.status === 200 && response.data.status === "OK") {
-          return response.data.data;
+          const accounts = response.data.data;
+
+          return {
+            owner: accounts.filter(
+              (account) => account.account_type === "owner"
+            ),
+            veterinarian: accounts.filter(
+              (account) => account.account_type === "veterinarian"
+            ),
+            admin: accounts.filter(
+              (account) => account.account_type === "admin"
+            ),
+          };
         }
 
-        return [];
+        return {
+          owner: [],
+          veterinarian: [],
+          admin: [],
+        };
       }}
       {...props}
     />

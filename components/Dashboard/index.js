@@ -4,7 +4,7 @@ import Icon from "@components/icons/Icon";
 import PlusIcon from "@components/icons/PlusIcon";
 import Masonry from "@components/Masonry";
 import FormModal from "@components/Modal/FormModal";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { LoadingDial } from "utility";
 
@@ -18,6 +18,7 @@ export default function Dashboard({
   newRecordForm,
   newRecordButtonLabel = null,
   noRecordLabel = "No records found",
+  defaultCategory = "data",
 }) {
   const queryClient = useQueryClient();
 
@@ -25,10 +26,48 @@ export default function Dashboard({
     type: accountType,
   });
 
-  const { data, isLoading: isDataLoading } = useQuery(
+  const [selectedCatergory, setSelectedCategory] = useState();
+
+  const { data: rawData = {}, isLoading: isDataLoading } = useQuery(
     account && id,
-    async () => await getData(account)
+    async () => {
+      const data = await getData(account);
+
+      if (Array.isArray(data)) {
+        return {
+          [defaultCategory]: data,
+        };
+      }
+
+      return data;
+    }
   );
+
+  const categories = useMemo(() => {
+    const keys = Object.keys(rawData);
+
+    if (keys.length >= 1) {
+      if (defaultCategory in keys) {
+        setSelectedCategory(defaultCategory);
+      } else {
+        setSelectedCategory(keys[0]);
+      }
+    }
+
+    return keys;
+  }, [rawData, defaultCategory]);
+
+  const selectedData = useMemo(() => {
+    if (categories.length === 0) {
+      return [];
+    }
+
+    if (!categories.includes(selectedCatergory)) {
+      return rawData[categories[0]];
+    }
+
+    return rawData[selectedCatergory];
+  }, [rawData, selectedCatergory, categories]);
 
   return !isAccountLoading ? (
     <div className="px-[10%]">
@@ -54,10 +93,15 @@ export default function Dashboard({
                   }
                   form={React.cloneElement(newRecordForm)}
                   onSuccess={(newData) => {
-                    queryClient.setQueryData(id, (oldData) => [
-                      newData,
-                      ...oldData,
-                    ]);
+                    queryClient.setQueryData(id, (oldData) => {
+                      return {
+                        ...oldData,
+                        [defaultCategory]: [
+                          newData,
+                          ...oldData[defaultCategory],
+                        ],
+                      };
+                    });
                   }}
                 />
               ) : null}
@@ -65,18 +109,37 @@ export default function Dashboard({
           </div>
         </div>
       </div>
+      {categories.length > 1 ? (
+        <div className="card card-compact bg-base-100 shadow-xl mb-4">
+          <div className="card-body block !p-2 space-x-2">
+            {categories.map((category) => {
+              return (
+                <button
+                  className={`btn btn-xs btn-ghost ${
+                    category === selectedCatergory ? "btn-active" : ""
+                  }`}
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                >
+                  {category}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
       {isDataLoading ? (
         <>
           <LoadingDial />
         </>
-      ) : (data ?? []).length > 0 ? (
+      ) : selectedData.length > 0 ? (
         <>
           <div className="hidden">
             <div className="flex sm:flex lg:flex xl:flex"></div>
             <div className="hidden sm:hidden lg:hidden xl:hidden"></div>
           </div>
           <Masonry>
-            {data.map((d, index) =>
+            {selectedData.map((d, index) =>
               React.cloneElement(dataComponent, {
                 key: keyFunc(d),
                 data: { ...d, index: index + 1 },
