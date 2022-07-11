@@ -40,12 +40,8 @@ export default function EditAppointmentForm({
   const [error, setError] = useState();
 
   const editAppointment = useMutation(async ({ date, pets }) => {
-    await makeApiPostRequest("/api/appointment/delete", {
+    return await makeApiPostRequest("/api/appointment/edit", {
       id,
-      date,
-      pets,
-    });
-    return await makeApiPostRequest("/api/appointment/new", {
       date,
       pets,
     });

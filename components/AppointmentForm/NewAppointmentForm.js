@@ -46,7 +46,7 @@ export default function NewAppointmentForm({
     });
   });
 
-  const { data: reasons = [], isLoading: isPetsLoading } = useQuery(
+  const { data: reasons = [], isLoading: isReasonsLoading } = useQuery(
     account && "get_reasons",
     async () => {
       const response = await makeApiPostRequest("/api/entity/reason/getAll");
@@ -58,7 +58,7 @@ export default function NewAppointmentForm({
     }
   );
 
-  const { data: pets = [], isLoading: isReasonsLoading } = useQuery(
+  const { data: pets = [], isLoading: isPetsLoading } = useQuery(
     account && "get_pets",
     async () => {
       const response = await makeApiPostRequest("/api/account/owner/getPets", {
@@ -108,6 +108,7 @@ export default function NewAppointmentForm({
           onSuccess({
             form_id: appointments[0].form_id,
             date: appointments[0].appt_date,
+            owner_id: appointments[0].owner_id,
             pets: appointments.map((appointment) => {
               return {
                 pet_id: appointment.pet_id,

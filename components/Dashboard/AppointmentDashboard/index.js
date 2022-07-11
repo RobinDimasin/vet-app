@@ -1,10 +1,12 @@
 import EditAppointmentForm from "@components/AppointmentForm/EditAppointmentForm";
+import FillUpAppointmentForm from "@components/AppointmentForm/FillUpAppointmentForm";
 import NewAppointmentForm from "@components/AppointmentForm/NewAppointmentForm";
 import AccountContext from "@components/context/Account/AccountContext";
 import DeleteIcon from "@components/icons/DeleteIcon";
 import EditIcon from "@components/icons/EditIcon";
 import Icon from "@components/icons/Icon";
 import InfoIcon from "@components/icons/InfoIcon";
+import PencilIcon from "@components/icons/PencilIcon";
 import Modal from "@components/Modal";
 import FormModal from "@components/Modal/FormModal";
 import moment from "moment";
@@ -95,6 +97,7 @@ function AppointmentInfo({
   showOwner = false,
   showDelete = true,
   showEdit = true,
+  showFillUp = false,
 }) {
   const queryClient = useQueryClient();
   const [appointment, setAppointment] = useState(_appointment);
@@ -180,9 +183,7 @@ function AppointmentInfo({
               }
               onSuccess={(appointment) => {
                 setAppointment(appointment);
-                appointment.pets.forEach((pet) => {
-                  queryClient.invalidateQueries(pet.pet_id);
-                });
+                // queryClient.invalidateQueries(id);
               }}
             />
           )}
@@ -227,6 +228,20 @@ function AppointmentInfo({
             </button>
           )}
         </div>
+        {showFillUp && (
+          <FormModal
+            trigger={
+              <button className="btn btn-accent btn-sm">
+                <Icon icon={<PencilIcon />} /> Fill Up
+              </button>
+            }
+            form={<FillUpAppointmentForm id={appointment.form_id} />}
+            onSuccess={(appointment) => {
+              setAppointment(appointment);
+              // queryClient.invalidateQueries(id);
+            }}
+          />
+        )}
       </div>
     </div>
   );
@@ -307,12 +322,33 @@ const AdminAppointmentDashboard = (props) => {
   );
 };
 
+const VeterinarianAppointmentDashboard = (props) => {
+  return (
+    <Dashboard
+      id="veterinarian_appointments"
+      keyFunc={(form) => form.form_id}
+      name="Appointments"
+      accountType="veterinarian"
+      dataComponent={
+        <AppointmentInfo showOwner={true} showEdit={false} showFillUp={true} />
+      }
+      noRecordLabel="No appointments found"
+      getData={async () => {
+        const response = await makeApiPostRequest("/api/appointment/getAll");
+
+        return formatAppointmentsResponse(response);
+      }}
+      {...props}
+    />
+  );
+};
+
 const GetAppointmentDashboard = (type) => {
   switch (type) {
     case "admin":
       return AdminAppointmentDashboard;
     case "veterinarian":
-      return AdminAppointmentDashboard;
+      return VeterinarianAppointmentDashboard;
     case "owner":
       return OwnerAppointmentDashboard;
     default:

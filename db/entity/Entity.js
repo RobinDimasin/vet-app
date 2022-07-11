@@ -521,10 +521,10 @@ export default class Entity {
         Object.entries(match).length > 0 ? "WHERE" : ""
       } ${Object.keys(match)
         .map((column) => `${column}=?`)
-        .join(" && ")}`,
+        .join(" AND ")}`,
       `SELECT * FROM ${this.name} WHERE ${this.primaryKey
         .map((pk) => `${pk} = ?`)
-        .join(", ")}`,
+        .join(" AND ")}`,
     ];
 
     const response = await this.execute({

@@ -5,7 +5,8 @@
             "@components/*": ["components/*"],
             "@styles/*": ["styles/*"],
             "@db/*": ["db/*"],
-            "@entity/*": ["db/entity/*"]
+            "@entity/*": ["db/entity/*"],
+            "@utility/*": ["utility/*"]
         }
     }
 }
