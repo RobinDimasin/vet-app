@@ -6,7 +6,8 @@ import withAccount from "lib/middleware/withAccount";
 export default withAccount(
   async (req, res) => {
     if (req.method === "POST") {
-      const { id, type } = req.body;
+      const { type, key = "id" } = req.body;
+      const id = req.body[key];
 
       if (!id) {
         return {
@@ -30,7 +31,7 @@ export default withAccount(
       let account_id = id;
 
       if (type) {
-        const response = await EntityList[type].find({ id });
+        const response = await EntityList[type].find({ [key]: id });
 
         if (response.data && response.data[0]) {
           account_id = response.data[0].account_id;
@@ -47,5 +48,5 @@ export default withAccount(
         .json({ status: STATUS.NOT_OK, message: "Method not allowed" });
     }
   },
-  ["admin", "veterinarian"]
+  ["owner", "admin", "veterinarian"]
 );

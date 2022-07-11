@@ -12,7 +12,12 @@ import FormModal from "@components/Modal/FormModal";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { LoadingDial, makeApiPostRequest, makeProperty } from "utility";
+import {
+  LoadingDial,
+  makeApiPostRequest,
+  makeName,
+  makeProperty,
+} from "utility";
 import Dashboard from "..";
 import { AccountMoreInfo } from "../AccountDashboard";
 
@@ -26,17 +31,40 @@ function AppointmentPetBriefInfo({ appointmentPet }) {
     return [];
   });
 
-  const { data: pet, isLoading } = useQuery(appointmentPet.pet_id, async () => {
-    const response = await makeApiPostRequest("/api/pet/details", {
-      id: appointmentPet.pet_id,
-    });
+  const { data: pet, isLoading: isPetLoading } = useQuery(
+    appointmentPet.pet_id,
+    async () => {
+      const response = await makeApiPostRequest("/api/pet/details", {
+        id: appointmentPet.pet_id,
+      });
 
-    if (response.status === 200 && response.data.status === "OK") {
-      return response.data.data[0];
+      if (response.status === 200 && response.data.status === "OK") {
+        return response.data.data[0];
+      }
+
+      throw new Error("Error fetching pet");
     }
+  );
 
-    throw new Error("Error fetching pet");
-  });
+  const { data: veterinarian, isLoading: isVeterinarianLoading } = useQuery(
+    appointmentPet.veterinarian_license_no,
+    async () => {
+      const response = await makeApiPostRequest(
+        "/api/account/getAccountDetailsOf",
+        {
+          license_no: appointmentPet.veterinarian_license_no,
+          type: "veterinarian",
+          key: "license_no",
+        }
+      );
+
+      if (response.status === 200 && response.data.status === "OK") {
+        return response.data.data;
+      } else {
+        throw new Error("Invalid credentials");
+      }
+    }
+  );
 
   const [reasonName, setReasonName] = useState(appointmentPet.reason);
 
@@ -50,26 +78,14 @@ function AppointmentPetBriefInfo({ appointmentPet }) {
     }
   }, [reasons, appointmentPet.reason]);
 
-  return isLoading || !pet ? (
+  return isPetLoading || !pet ? (
     <div>Loading...</div>
   ) : (
     <div className="break-inside card card-compact bg-base-100 shadow-xl">
       <div className="card-body">
         <h2 className="flex justify-between">
           <div className="truncate max-w-xs">
-            <b>{pet.name}</b>
-            <p className="break-words whitespace-normal">
-              <b>{reasonName}:</b> {appointmentPet.description}
-            </p>
-          </div>
-          <div className="my-auto">
-            <Modal
-              trigger={
-                <button className="btn btn-ghost btn-sm btn-circle">
-                  <Icon icon={<InfoIcon />} />
-                </button>
-              }
-            >
+            <Modal trigger={<b className="link">{pet.name}</b>}>
               <div>
                 <h2 className="card-title text-ellipsis font-bold truncate">
                   {pet.name}
@@ -84,6 +100,38 @@ function AppointmentPetBriefInfo({ appointmentPet }) {
                 </p>
               </div>
             </Modal>
+            <p className="break-words whitespace-normal">
+              {makeProperty("description", appointmentPet, {
+                key: () => reasonName,
+              })}
+              <br />
+              {makeProperty("weight", appointmentPet)}
+              {makeProperty("temperature", appointmentPet)}
+              {makeProperty("prescription", appointmentPet)}
+              <br />
+              {veterinarian ? (
+                <>
+                  <b>Processed by: </b>
+                  {veterinarian ? (
+                    <Modal
+                      trigger={
+                        <span className="link">{makeName(veterinarian)}</span>
+                      }
+                    >
+                      <AccountMoreInfo
+                        account={{
+                          ...veterinarian,
+                          id: veterinarian.account_id,
+                        }}
+                        doFetch={true}
+                      />
+                    </Modal>
+                  ) : (
+                    "Loading..."
+                  )}
+                </>
+              ) : null}
+            </p>
           </div>
         </h2>
       </div>
@@ -129,6 +177,11 @@ function AppointmentInfo({
         <div>
           <h2 className="card-title text-ellipsis font-bold truncate">
             {moment(appointment.date).format("MMMM Do YYYY")}
+            {!appointment.fulfilled ? (
+              <span className="badge badge-success badge-sm">COMPLETED</span>
+            ) : (
+              <span className="badge badge-info badge-sm">PENDING</span>
+            )}
           </h2>
           {showOwner ? (
             <>
@@ -164,7 +217,7 @@ function AppointmentInfo({
             showDelete + showEdit
           } gap-4 drop-shadow`}
         >
-          {showEdit && (
+          {!appointment.fulfilled && showEdit && (
             <FormModal
               trigger={
                 <button className="btn btn-success btn-sm">
@@ -187,7 +240,7 @@ function AppointmentInfo({
               }}
             />
           )}
-          {showDelete && (
+          {!appointment.fulfilled && showDelete && (
             <button
               className={`btn btn-error btn-sm drop-shadow ${
                 deleting ? "loading btn-disabled" : ""
@@ -259,8 +312,12 @@ const formatAppointmentsResponse = (response) => {
           form_id: appointments[0].form_id,
           date: appointments[0].appt_date,
           owner_id: appointments[0].owner_id,
+          fulfilled: appointments.some(
+            (appointment) => appointment.veterinarian_license_no
+          ),
           pets: appointments.map((appointment) => {
             return {
+              ...appointment,
               pet_id: appointment.pet_id,
               reason: appointment.reason_id,
               description: appointment.reason_desc,

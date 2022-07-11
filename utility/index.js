@@ -46,6 +46,8 @@ export const LoadingDial = () => {
 const valueFormatters = {
   created_at: (v) => moment(v).format("LLL"),
   birthdate: (v) => moment(v).format("MMMM Do YYYY"),
+  weight: (v) => `${v} kg`,
+  temperature: (v) => `${v} °C`,
 };
 
 const keyFormatters = {
@@ -53,6 +55,7 @@ const keyFormatters = {
   account_id: () => "Account ID",
   id: () => "ID",
   license_no: () => "License Number",
+  veterinarian_license_no: () => "License Number",
 };
 
 export const makeProperty = (key, obj, format = {}) => {
