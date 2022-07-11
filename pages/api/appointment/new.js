@@ -14,11 +14,13 @@ export const newAppointment = async ({ date, pets, owner_id }) => {
 
   const response = await Promise.all(
     pets.map(async (pet) => {
-      return await EntityList.appointment.new({
+      const appointmentResponse = await EntityList.appointment.new({
         ...pet,
         form_id: responseForm.data[0].id,
         appt_date: date,
       });
+
+      return appointmentResponse;
     })
   );
   const okay = response.every((r) => r.status === STATUS.OK);
@@ -27,14 +29,16 @@ export const newAppointment = async ({ date, pets, owner_id }) => {
     return {
       statusCode: 200,
       status: STATUS.OK,
-      data: response.map((r) => {
-        return r.data.map((d) => {
-          return {
-            ...d,
-            owner_id,
-          };
-        });
-      }),
+      data: response
+        .map((r) => {
+          return r.data.map((d) => {
+            return {
+              ...d,
+              owner_id,
+            };
+          });
+        })
+        .flat(Infinity),
     };
   } else {
     return {
