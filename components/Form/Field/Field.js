@@ -2,7 +2,14 @@ import { createElement, useContext, useEffect, useState } from "react";
 import { getValueFromObject } from "utility";
 import FormContext from "../FormContext";
 
-export default function Field({ id, label, required, as, ...props }) {
+export default function Field({
+  id,
+  label,
+  required,
+  valueMap = (v) => v,
+  as,
+  ...props
+}) {
   const [error, setError] = useState();
   const { formik } = useContext(FormContext);
 

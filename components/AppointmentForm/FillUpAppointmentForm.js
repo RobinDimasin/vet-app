@@ -110,12 +110,19 @@ export default function FillUpAppointmentForm({
     enableReinitialize: true,
     initialValues: appointment
       ? {
-          veterinarian_name: makeName(account),
+          veterinarian_name: "Vet name: " + makeName(account),
           veterinarian_license_no: account.license_no,
+          veterinarian_license_no_label: "License No.: " + account.license_no,
           date: moment(appointment.date).format("YYYY-MM-DD"),
+          date_label:
+            "Date: " + moment(appointment.appt_date).format("YYYY-MM-DD"),
           pets: appointment.pets.map((pet) => {
             return {
               ...pet,
+              reason_label:
+                "Reason: " +
+                reasons.find((reason) => reason.id === pet.reason).reason,
+              description_label: "Description: " + pet.description,
               next_appt_date: null,
               next_appt_reason: null,
               next_appt_description: null,
@@ -272,8 +279,8 @@ export default function FillUpAppointmentForm({
       >
         <div className="grid grid-flow-row grid-cols-2 gap-4">
           <TextInputField
-            id="veterinarian_license_no"
-            name="veterinarian_license_no"
+            id="veterinarian_license_no_label"
+            name="veterinarian_license_no_label"
             placeholder="License No."
             disabled
           />
@@ -284,12 +291,7 @@ export default function FillUpAppointmentForm({
             disabled
           />
         </div>
-        <DateField
-          id="date"
-          placeholder="Choose a date"
-          min={moment().format("YYYY-MM-DD")}
-          disabled
-        />
+        <TextInputField id="date_label" placeholder="Choose a date" disabled />
 
         <FieldArray name="pets">
           {({ insert, remove, push }) => (
@@ -311,14 +313,14 @@ export default function FillUpAppointmentForm({
                         </p>
                       </h2>
                       <TextInputField
-                        id={`pets.${index}.reason`}
-                        name={`pets.${index}.reason`}
+                        id={`pets.${index}.reason_label`}
+                        name={`pets.${index}.reason_label`}
                         placeholder="Reason"
                         disabled
                       />
                       <TextAreaField
-                        id={`pets.${index}.description`}
-                        name={`pets.${index}.description`}
+                        id={`pets.${index}.description_label`}
+                        name={`pets.${index}.description_label`}
                         placeholder="Description"
                         disabled
                       />
