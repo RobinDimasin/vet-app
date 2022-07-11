@@ -2,6 +2,7 @@ import EditAppointmentForm from "@components/AppointmentForm/EditAppointmentForm
 import FillUpAppointmentForm from "@components/AppointmentForm/FillUpAppointmentForm";
 import NewAppointmentForm from "@components/AppointmentForm/NewAppointmentForm";
 import AccountContext from "@components/context/Account/AccountContext";
+import useAccount from "@components/hooks/useAccount";
 import DeleteIcon from "@components/icons/DeleteIcon";
 import EditIcon from "@components/icons/EditIcon";
 import Icon from "@components/icons/Icon";
@@ -437,9 +438,8 @@ const GetAppointmentDashboard = (type) => {
 export default function AppointmentDashboard({ accountType, ...props }) {
   const { account } = useContext(AccountContext);
 
-  return account ? (
-    React.createElement(GetAppointmentDashboard(account.account_type), props)
-  ) : (
-    <LoadingDial />
+  return React.createElement(
+    GetAppointmentDashboard(account ? account.account_type : null),
+    props
   );
 }

@@ -1,4 +1,5 @@
 import AccountContext from "@components/context/Account/AccountContext";
+import useAccount from "@components/hooks/useAccount";
 import DeleteIcon from "@components/icons/DeleteIcon";
 import EditIcon from "@components/icons/EditIcon";
 import Icon from "@components/icons/Icon";
@@ -215,9 +216,8 @@ const GetPetDashboard = (type) => {
 export default function PetDashboard(props) {
   const { account } = useContext(AccountContext);
 
-  return account ? (
-    React.createElement(GetPetDashboard(account.account_type), props)
-  ) : (
-    <LoadingDial />
+  return React.createElement(
+    GetPetDashboard(account ? account.account_type : null),
+    props
   );
 }
