@@ -43,7 +43,7 @@ export default function Modal({ trigger, children }) {
         contentLabel="Example Modal"
       >
         <div data-theme={THEME}>
-          <div className="card bg-base-100 shadow-xl">
+          <div className="card bg-base-100 shadow-xl max-h-[80vh] overflow-auto">
             <div className="card-body card-compact">
               <button
                 onClick={closeModal}
