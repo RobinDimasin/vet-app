@@ -237,7 +237,7 @@ export default function FillUpAppointmentForm({
                         id={`pets.${index}.description`}
                         name={`pets.${index}.description`}
                         placeholder="Description"
-                        // disabled
+                        disabled
                       />
                       <div className="grid grid-flow-row grid-cols-2 gap-4">
                         <div>
