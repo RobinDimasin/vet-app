@@ -284,7 +284,7 @@ function AppointmentInfo({
             </button>
           )}
         </div>
-        {showFillUp && (
+        {!appointment.fulfilled && showFillUp && (
           <FormModal
             trigger={
               <button className="btn btn-accent btn-sm">
