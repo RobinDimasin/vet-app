@@ -144,9 +144,17 @@ export default function Dashboard({
                 key: keyFunc(d),
                 data: { ...d, index: index + 1 },
                 onDelete: () => {
-                  queryClient.setQueryData(id, (oldData) =>
-                    oldData.filter((p) => keyFunc(p) !== keyFunc(d))
-                  );
+                  queryClient.setQueryData(id, (oldData) => {
+                    const newData = {};
+
+                    for (const category of categories) {
+                      newData[category] = oldData[category].filter(
+                        (item) => keyFunc(item) !== keyFunc(d)
+                      );
+                    }
+
+                    return newData;
+                  });
                 },
               })
             )}
