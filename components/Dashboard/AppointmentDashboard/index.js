@@ -11,6 +11,7 @@ import PencilIcon from "@components/icons/PencilIcon";
 import Modal from "@components/Modal";
 import FormModal from "@components/Modal/FormModal";
 import moment from "moment";
+import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import {
@@ -423,10 +424,12 @@ const VeterinarianAppointmentDashboard = (props) => {
 };
 
 const GetAppointmentDashboard = (type) => {
+  console.log("bar");
   switch (type) {
     case "admin":
       return AdminAppointmentDashboard;
     case "veterinarian":
+      console.log("fooo");
       return VeterinarianAppointmentDashboard;
     case "owner":
       return OwnerAppointmentDashboard;
@@ -436,10 +439,10 @@ const GetAppointmentDashboard = (type) => {
 };
 
 export default function AppointmentDashboard({ accountType, ...props }) {
-  const { account } = useContext(AccountContext);
+  const router = useRouter();
+  const { type } = router.query;
 
-  return React.createElement(
-    GetAppointmentDashboard(account ? account.account_type : null),
-    props
-  );
+  console.log({ type });
+
+  return React.createElement(GetAppointmentDashboard(type), props);
 }

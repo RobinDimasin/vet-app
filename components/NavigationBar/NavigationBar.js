@@ -26,7 +26,9 @@ export default function NavigationBar() {
           {
             key: "appointment",
             label: "Appointment",
-            route: "/appointments",
+            route: `/appointments?type=${
+              account ? account.account_type : "owner"
+            }`,
           },
           {
             key: "reviews",
@@ -111,13 +113,13 @@ export default function NavigationBar() {
           {
             key: "pet_dashboard",
             label: "Pet Dashboard",
-            route: "/pets",
+            route: "/pets?type=admin",
             visible: () => account && account.account_type === "admin",
           },
           {
             key: "appointment_dashboard",
             label: "Appointment Dashboard",
-            route: "/appointments",
+            route: "/appointments?type=admin",
             visible: () => account && account.account_type === "admin",
           },
           {
@@ -135,7 +137,7 @@ export default function NavigationBar() {
           {
             key: "available_appointment",
             label: "Available Appointments",
-            route: "/appointments",
+            route: "/appointments?type=veterinarian",
             visible: () => account && account.account_type === "veterinarian",
           },
         ],

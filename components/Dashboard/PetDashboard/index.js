@@ -8,6 +8,7 @@ import Modal from "@components/Modal";
 import FormModal from "@components/Modal/FormModal";
 import EditPetForm from "@components/PetForm/EditPetForm";
 import NewPetForm from "@components/PetForm/NewPetForm";
+import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { LoadingDial, makeApiPostRequest, makeProperty } from "utility";
@@ -214,10 +215,8 @@ const GetPetDashboard = (type) => {
 };
 
 export default function PetDashboard(props) {
-  const { account } = useContext(AccountContext);
+  const router = useRouter();
+  const { type } = router.query;
 
-  return React.createElement(
-    GetPetDashboard(account ? account.account_type : null),
-    props
-  );
+  return React.createElement(GetPetDashboard(type), props);
 }
