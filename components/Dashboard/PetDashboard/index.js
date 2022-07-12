@@ -176,7 +176,7 @@ const OwnerPetDashboard = (props) => {
   return (
     <Dashboard
       id="pets"
-      name="Pets"
+      name="My Pets"
       accountType="owner"
       dataComponent={<PetInfo />}
       newRecordForm={<NewPetForm />}

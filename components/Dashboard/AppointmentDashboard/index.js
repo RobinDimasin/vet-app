@@ -424,12 +424,10 @@ const VeterinarianAppointmentDashboard = (props) => {
 };
 
 const GetAppointmentDashboard = (type) => {
-  console.log("bar");
   switch (type) {
     case "admin":
       return AdminAppointmentDashboard;
     case "veterinarian":
-      console.log("fooo");
       return VeterinarianAppointmentDashboard;
     case "owner":
       return OwnerAppointmentDashboard;
@@ -441,8 +439,6 @@ const GetAppointmentDashboard = (type) => {
 export default function AppointmentDashboard({ accountType, ...props }) {
   const router = useRouter();
   const { type } = router.query;
-
-  console.log({ type });
 
   return React.createElement(GetAppointmentDashboard(type), props);
 }
