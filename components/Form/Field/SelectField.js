@@ -20,7 +20,7 @@ export default function SelectField({
       {...props}
     >
       <option value="" disabled selected hidden>
-        {placeholder}
+        {/* {placeholder} */}
       </option>
       {options.map((option) => {
         return (

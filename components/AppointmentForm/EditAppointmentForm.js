@@ -23,6 +23,7 @@ import { LoadingDial, makeApiPostRequest } from "utility";
 import useAccount from "@components/hooks/useAccount";
 import FormModal from "@components/Modal/FormModal";
 import NewPetForm from "@components/PetForm/NewPetForm";
+import moment from "moment";
 
 export default function EditAppointmentForm({
   id,
@@ -40,12 +41,8 @@ export default function EditAppointmentForm({
   const [error, setError] = useState();
 
   const editAppointment = useMutation(async ({ date, pets }) => {
-    await makeApiPostRequest("/api/appointment/delete", {
+    return await makeApiPostRequest("/api/appointment/edit", {
       id,
-      date,
-      pets,
-    });
-    return await makeApiPostRequest("/api/appointment/new", {
       date,
       pets,
     });
@@ -79,9 +76,14 @@ export default function EditAppointmentForm({
   );
 
   const formik = useFormik({
-    initialValues: values,
+    initialValues: {
+      ...values,
+      date: moment(values.date).format("YYYY-MM-DD"),
+    },
     validationSchema: Yup.object({
-      date: Yup.date().required("Required"),
+      date: Yup.date()
+        .min(moment().format("YYYY-MM-DD"), "Date cannot be from the past")
+        .required("Required"),
       pets: Yup.array()
         .of(
           Yup.object({
@@ -151,7 +153,11 @@ export default function EditAppointmentForm({
         }
         {...props}
       >
-        <DateField id="date" placeholder="Choose a date" />
+        <DateField
+          id="date"
+          placeholder="Date"
+          min={moment().format("YYYY-MM-DD")}
+        />
         <FieldArray name="pets">
           {({ insert, remove, push }) => (
             <div>
@@ -202,7 +208,7 @@ export default function EditAppointmentForm({
                       <SelectField
                         id={`pets.${index}.reason`}
                         name={`pets.${index}.reason`}
-                        placeholder="Choose a reason"
+                        placeholder="Reason"
                         options={reasons.map((reason) => {
                           return {
                             id: reason.id,

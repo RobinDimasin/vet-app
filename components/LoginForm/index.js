@@ -93,13 +93,13 @@ export default function LoginForm({ type = "owner" }) {
         id="password"
         type="password"
         placeholder="Password"
-        label={
-          <Link href="/forgot-password">
-            <a className="label-text-alt link link-primary text-start text-xs">
-              Forgot Password?
-            </a>
-          </Link>
-        }
+        // label={
+        //   <Link href="/forgot-password">
+        //     <a className="label-text-alt link link-primary text-start text-xs">
+        //       Forgot Password?
+        //     </a>
+        //   </Link>
+        // }
       />
     </Form>
   );

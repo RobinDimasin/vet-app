@@ -10,7 +10,10 @@ export default function useAccount({ type = "owner" } = {}) {
   const { account, setAccount, logout } = useContext(AccountContext);
   const router = useRouter();
 
-  const destination = useMemo(() => router.pathname, [router]);
+  const destination = useMemo(
+    () => router.pathname + "?" + new URLSearchParams(router.query).toString(),
+    [router]
+  );
 
   useEffect(() => {
     const redirectToLogin = () => {

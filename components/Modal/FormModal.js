@@ -1,3 +1,4 @@
+import { THEME } from "@utility/theme";
 import React, { useState } from "react";
 import ReactModal from "react-modal";
 
@@ -29,7 +30,7 @@ export default function FormModal({
             left: "50%",
             right: "auto",
             bottom: "auto",
-            transform: "translate(-50%, 0)",
+            transform: "translate(-50%, 2.5%)",
             border: "none",
             paddingBottom: "40px",
             backgroundColor: "transparent",
@@ -37,8 +38,10 @@ export default function FormModal({
         }}
         contentLabel="Example Modal"
       >
-        <div data-theme="cupcake">
-          <div className={`card bg-base-100 shadow-xl ${className}`}>
+        <div data-theme={THEME}>
+          <div
+            className={`card bg-base-100 shadow-xl ${className} max-h-[80vh] overflow-auto`}
+          >
             <div className="card-body card-compact">
               <button
                 onClick={closeModal}

@@ -1,4 +1,5 @@
 import ModalContext from "@components/context/Modal/ModalContext";
+import { THEME } from "@utility/theme";
 import React, { useContext, useEffect, useState } from "react";
 import ReactModal from "react-modal";
 
@@ -33,7 +34,7 @@ export default function Modal({ trigger, children }) {
             left: "50%",
             right: "auto",
             bottom: "auto",
-            transform: "translate(-50%, 0)",
+            transform: "translate(-50%, 2.5%)",
             border: "none",
             paddingBottom: "40px",
             backgroundColor: "transparent",
@@ -41,8 +42,8 @@ export default function Modal({ trigger, children }) {
         }}
         contentLabel="Example Modal"
       >
-        <div data-theme="cupcake">
-          <div className="card bg-base-100 shadow-xl">
+        <div data-theme={THEME}>
+          <div className="card bg-base-100 shadow-xl max-h-[80vh] overflow-auto">
             <div className="card-body card-compact">
               <button
                 onClick={closeModal}

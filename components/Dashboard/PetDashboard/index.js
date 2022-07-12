@@ -1,4 +1,5 @@
 import AccountContext from "@components/context/Account/AccountContext";
+import useAccount from "@components/hooks/useAccount";
 import DeleteIcon from "@components/icons/DeleteIcon";
 import EditIcon from "@components/icons/EditIcon";
 import Icon from "@components/icons/Icon";
@@ -7,6 +8,7 @@ import Modal from "@components/Modal";
 import FormModal from "@components/Modal/FormModal";
 import EditPetForm from "@components/PetForm/EditPetForm";
 import NewPetForm from "@components/PetForm/NewPetForm";
+import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { LoadingDial, makeApiPostRequest, makeProperty } from "utility";
@@ -41,95 +43,86 @@ function PetInfo({
   });
 
   return (
-    <div className="break-inside card card-compact bg-base-100 shadow-xl">
-      <div className="card-body">
-        <div>
-          <h2 className="card-title text-ellipsis font-bold truncate">
-            {pet.name}
-          </h2>
-          {showOwner ? (
-            <>
-              <b>Owner:</b>{" "}
-              {owner ? (
-                <Modal trigger={<span className="link">{owner.email}</span>}>
-                  <AccountMoreInfo
-                    account={{
-                      ...owner,
-                      id: owner.account_id,
-                    }}
-                    doFetch={true}
-                  />
-                </Modal>
-              ) : (
-                "Loading..."
-              )}
-            </>
-          ) : null}
-          {makeProperty("birthdate", pet)}
-          {makeProperty("sex", pet)}
-          {makeProperty("breed", pet)}
-          {makeProperty("species", pet)}
-          {makeProperty("description", pet)}
-        </div>
-        <div
-          className={`grid grid-cols-${
-            showDelete + showEdit
-          } gap-4 drop-shadow`}
-        >
-          {showEdit && (
-            <FormModal
-              trigger={
-                <button className="btn btn-success btn-sm">
-                  <Icon icon={<EditIcon />} />
-                  Edit
-                </button>
-              }
-              form={<EditPetForm id={pet.id} values={pet} />}
-              onSuccess={(pet) => {
-                setPet(pet);
-              }}
-            />
-          )}
-          {showDelete && (
-            <button
-              className={`btn btn-error btn-sm drop-shadow ${
-                deleting ? "loading btn-disabled" : ""
-              }`}
-              onClick={async () => {
-                if (deletionConfirming) {
-                  setDeleting(true);
-                  const response = await makeApiPostRequest("/api/pet/delete", {
-                    id: pet.id,
-                  });
-
-                  if (
-                    response.status === 200 &&
-                    response.data.status === "OK"
-                  ) {
-                    onDelete(pet);
-                  }
-                  setDeleting(false);
-                  setDeletionConfirming(false);
-                } else {
-                  setDeletionConfirming(true);
-                }
-              }}
-            >
-              {deleting ? (
-                "Deleting..."
-              ) : !deletionConfirming ? (
-                <>
-                  <Icon icon={<DeleteIcon />} />
-                  Delete
-                </>
-              ) : (
-                "Are you sure?"
-              )}
-            </button>
-          )}
-        </div>
+    <>
+      <div>
+        <h2 className="card-title text-ellipsis font-bold">{pet.name}</h2>
+        {showOwner ? (
+          <>
+            <b>Owner:</b>{" "}
+            {owner ? (
+              <Modal trigger={<span className="link">{owner.email}</span>}>
+                <AccountMoreInfo
+                  account={{
+                    ...owner,
+                    id: owner.account_id,
+                  }}
+                  doFetch={true}
+                />
+              </Modal>
+            ) : (
+              "Loading..."
+            )}
+          </>
+        ) : null}
+        {makeProperty("birthdate", pet)}
+        {makeProperty("sex", pet)}
+        {makeProperty("breed", pet)}
+        {makeProperty("species", pet)}
+        {makeProperty("description", pet)}
       </div>
-    </div>
+      <div
+        className={`grid grid-cols-${showDelete + showEdit} gap-4 drop-shadow`}
+      >
+        {showEdit && (
+          <FormModal
+            trigger={
+              <button className="btn btn-success btn-sm">
+                <Icon icon={<EditIcon />} />
+                Edit
+              </button>
+            }
+            form={<EditPetForm id={pet.id} values={pet} />}
+            onSuccess={(pet) => {
+              setPet(pet);
+            }}
+          />
+        )}
+        {showDelete && (
+          <button
+            className={`btn btn-error btn-sm drop-shadow ${
+              deleting ? "loading btn-disabled" : ""
+            }`}
+            onClick={async () => {
+              if (deletionConfirming) {
+                setDeleting(true);
+                const response = await makeApiPostRequest("/api/pet/delete", {
+                  id: pet.id,
+                });
+
+                if (response.status === 200 && response.data.status === "OK") {
+                  onDelete(pet);
+                }
+                setDeleting(false);
+                setDeletionConfirming(false);
+              } else {
+                setDeletionConfirming(true);
+              }
+            }}
+          >
+            {deleting ? (
+              "Deleting..."
+            ) : !deletionConfirming ? (
+              <>
+                <Icon icon={<DeleteIcon />} />
+                Delete
+              </>
+            ) : (
+              "Are you sure?"
+            )}
+          </button>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -222,11 +215,8 @@ const GetPetDashboard = (type) => {
 };
 
 export default function PetDashboard(props) {
-  const { account } = useContext(AccountContext);
+  const router = useRouter();
+  const { type } = router.query;
 
-  return account ? (
-    React.createElement(GetPetDashboard(account.account_type), props)
-  ) : (
-    <LoadingDial />
-  );
+  return React.createElement(GetPetDashboard(type), props);
 }

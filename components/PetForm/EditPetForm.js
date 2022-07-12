@@ -9,6 +9,7 @@ import { makeApiPostRequest } from "utility";
 import SelectField from "@components/Form/Field/SelectField";
 import TextAreaField from "@components/Form/Field/TextAreaField";
 import DateField from "@components/Form/Field/DateField";
+import moment from "moment";
 
 export default function EditPetForm({
   id,
@@ -43,13 +44,21 @@ export default function EditPetForm({
   );
 
   const formik = useFormik({
-    initialValues: values,
+    initialValues: {
+      ...values,
+      birthdate: moment(values.birthdate).format("YYYY-MM-DD"),
+    },
     validationSchema: Yup.object({
       name: Yup.string()
         .max(64, "Must be 64 characters or less")
         .required("Required"),
       sex: Yup.string().oneOf(["M", "F"], "M or F only").required("Required"),
-      birthdate: Yup.date().required("Required"),
+      birthdate: Yup.date()
+        .max(
+          moment().format("YYYY-MM-DD"),
+          "Birthdate cannot be from the future"
+        )
+        .required("Required"),
       breed: Yup.string()
         .max(64, "Must be 64 characters or less")
         .required("Required"),
@@ -109,8 +118,12 @@ export default function EditPetForm({
       />
 
       <div className="grid grid-flow-row grid-cols-2 gap-4">
-        <TextInputField id="breed" type="text" placeholder="Breed" />
-        <TextInputField id="species" type="text" placeholder="Species" />
+        <div>
+          <TextInputField id="breed" type="text" placeholder="Breed" />
+        </div>
+        <div>
+          <TextInputField id="species" type="text" placeholder="Species" />
+        </div>
       </div>
       <TextAreaField
         id="description"
@@ -118,7 +131,11 @@ export default function EditPetForm({
         placeholder="Description"
         required={false}
       />
-      <DateField id="birthdate" placeholder="Birthdate" />
+      <DateField
+        id="birthdate"
+        placeholder="Birthdate"
+        max={moment().format("YYYY-MM-DD")}
+      />
     </Form>
   );
 }

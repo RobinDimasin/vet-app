@@ -40,7 +40,7 @@ export function AccountMoreInfo({ account, doFetch = false }) {
   return (
     <>
       <div>
-        <h2 className="card-title text-ellipsis font-bold truncate">
+        <h2 className="card-title text-ellipsis font-bold">
           <span>{moreInfo.username ?? account.username}</span>
           <span className="badge badge-sm">
             {account.account_type.toUpperCase()}
@@ -69,70 +69,65 @@ function AccountInfo({ data: _account, onDelete = () => {} }) {
   const [doFetch, setDoFetch] = useState(false);
 
   return (
-    <div className="break-inside card card-compact bg-base-100 shadow-xl">
-      <div className="card-body">
-        <div>
-          <h2 className="card-title text-ellipsis font-bold truncate">
-            <span>{account.username}</span>
-            <span className="badge badge-sm">
-              {account.account_type.toUpperCase()}
-            </span>
-          </h2>
-          {makeProperty("email", account)}
-          {makeProperty("created_at", account)}
-        </div>
-        <div className="grid grid-cols-2 gap-4 drop-shadow">
-          <Modal
-            trigger={
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={() => setDoFetch(true)}
-              >
-                <Icon icon={<InfoIcon />} />
-                More Info
-              </button>
-            }
-          >
-            <AccountMoreInfo account={account} doFetch={doFetch} />
-          </Modal>
-          <button
-            className={`btn btn-error btn-sm drop-shadow ${
-              deleting ? "loading btn-disabled" : ""
-            }`}
-            onClick={async () => {
-              if (deletionConfirming) {
-                setDeleting(true);
-                const response = await makeApiPostRequest(
-                  "/api/account/delete",
-                  {
-                    id: account.id,
-                  }
-                );
-
-                if (response.status === 200 && response.data.status === "OK") {
-                  onDelete(account);
-                }
-                setDeleting(false);
-                setDeletionConfirming(false);
-              } else {
-                setDeletionConfirming(true);
-              }
-            }}
-          >
-            {deleting ? (
-              "Deleting..."
-            ) : !deletionConfirming ? (
-              <>
-                <Icon icon={<DeleteIcon />} />
-                Delete
-              </>
-            ) : (
-              "Are you sure?"
-            )}
-          </button>
-        </div>
+    <>
+      <div>
+        <h2 className="card-title text-ellipsis font-bold truncate">
+          <span>{account.username}</span>
+          <span className="badge badge-sm">
+            {account.account_type.toUpperCase()}
+          </span>
+        </h2>
+        {makeProperty("email", account)}
+        {makeProperty("created_at", account)}
       </div>
-    </div>
+      <div className="grid grid-cols-2 gap-4 drop-shadow">
+        <Modal
+          trigger={
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={() => setDoFetch(true)}
+            >
+              <Icon icon={<InfoIcon />} />
+              More Info
+            </button>
+          }
+        >
+          <AccountMoreInfo account={account} doFetch={doFetch} />
+        </Modal>
+        <button
+          className={`btn btn-error btn-sm drop-shadow ${
+            deleting ? "loading btn-disabled" : ""
+          }`}
+          onClick={async () => {
+            if (deletionConfirming) {
+              setDeleting(true);
+              const response = await makeApiPostRequest("/api/account/delete", {
+                id: account.id,
+              });
+
+              if (response.status === 200 && response.data.status === "OK") {
+                onDelete(account);
+              }
+              setDeleting(false);
+              setDeletionConfirming(false);
+            } else {
+              setDeletionConfirming(true);
+            }
+          }}
+        >
+          {deleting ? (
+            "Deleting..."
+          ) : !deletionConfirming ? (
+            <>
+              <Icon icon={<DeleteIcon />} />
+              Delete
+            </>
+          ) : (
+            "Are you sure?"
+          )}
+        </button>
+      </div>
+    </>
   );
 }
 
@@ -144,13 +139,19 @@ export default function AccountDashboard({ ...props }) {
       accountType="admin"
       dataComponent={<AccountInfo />}
       noRecordLabel="No accounts found"
+      categories={{
+        owner: (account) => account.account_type === "owner",
+        veterinarian: (account) => account.account_type === "veterinarian",
+        admin: (account) => account.account_type === "admin",
+      }}
       getData={async () => {
         const response = await makeApiPostRequest(
           "/api/account/getAll?type=owner&type=veterinarian&type=admin"
         );
 
         if (response.status === 200 && response.data.status === "OK") {
-          return response.data.data;
+          const accounts = response.data.data;
+          return accounts;
         }
 
         return [];
