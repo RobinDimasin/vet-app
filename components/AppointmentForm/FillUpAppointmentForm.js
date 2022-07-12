@@ -210,46 +210,48 @@ export default function FillUpAppointmentForm({
 
           onSuccess(updatedForm);
 
-          queryClient.setQueriesData(
-            "veterinarian_appointments",
-            (oldForms) => {
-              const withUpdatedForm = [
-                updatedForm,
-                ...oldForms.filter(
-                  (form) => form.form_id !== updatedFormAppointments.form_id
-                ),
-              ];
+          queryClient.invalidateQueries("veterinarian_appointments");
 
-              const newFormsFormatted = newAppointments
-                .map((appointments) => {
-                  if (appointments.length == 0) {
-                    return null;
-                  }
+          // queryClient.setQueriesData(
+          //   "veterinarian_appointments",
+          //   (oldForms) => {
+          //     const withUpdatedForm = [
+          //       updatedForm,
+          //       ...oldForms.filter(
+          //         (form) => form.form_id !== updatedFormAppointments.form_id
+          //       ),
+          //     ];
 
-                  return {
-                    form_id: appointments[0].form_id,
-                    date: appointments[0].appt_date,
-                    owner_id: appointments[0].owner_id,
-                    fulfilled: appointments.some(
-                      (appointment) => appointment.veterinarian_license_no
-                    ),
-                    pets: appointments.map((appointment) => {
-                      return {
-                        ...appointment,
-                        pet_id: appointment.pet_id,
-                        reason: appointment.reason_id,
-                        description: appointment.reason_desc,
-                      };
-                    }),
-                  };
-                })
-                .filter((form) => form);
+          //     const newFormsFormatted = newAppointments
+          //       .map((appointments) => {
+          //         if (appointments.length == 0) {
+          //           return null;
+          //         }
 
-              return [...newFormsFormatted, ...withUpdatedForm].sort((a, b) => {
-                return new Date(a.date).getTime() - new Date(b.date).getTime();
-              });
-            }
-          );
+          //         return {
+          //           form_id: appointments[0].form_id,
+          //           date: appointments[0].appt_date,
+          //           owner_id: appointments[0].owner_id,
+          //           fulfilled: appointments.some(
+          //             (appointment) => appointment.veterinarian_license_no
+          //           ),
+          //           pets: appointments.map((appointment) => {
+          //             return {
+          //               ...appointment,
+          //               pet_id: appointment.pet_id,
+          //               reason: appointment.reason_id,
+          //               description: appointment.reason_desc,
+          //             };
+          //           }),
+          //         };
+          //       })
+          //       .filter((form) => form);
+
+          //     return [...newFormsFormatted, ...withUpdatedForm].sort((a, b) => {
+          //       return new Date(a.date).getTime() - new Date(b.date).getTime();
+          //     });
+          //   }
+          // );
         } else {
           onError();
         }
