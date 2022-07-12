@@ -50,16 +50,16 @@ export default function FAQ() {
             </p>
             <p>
               <br />
-              &nbsp; 1. Go to HOME {">"} Click "MAKE AN APPOINTMENT NOW!"
-              button.
+              &nbsp; 1. Go to HOME {">"} Click &quot;MAKE AN APPOINTMENT
+              NOW!&quot; button.
               <br />
-              &nbsp; 2. My Appointments page {">"} Click "+ MAKE AN APPOINTMENT"
-              button.
+              &nbsp; 2. My Appointments page {">"} Click &quot;+ MAKE AN
+              APPOINTMENT&quot; button.
               <br />
               &nbsp; 3. Choose date of appointment {">"} Select your pet.
               <br />
               &nbsp; 4. Choose reason of appointment and description {">"} Click
-              "Submit".
+              &quot;Submit&quot;.
             </p>
             <p>
               <br />
