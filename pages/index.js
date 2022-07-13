@@ -52,9 +52,11 @@ export default function Home() {
             </h1>
             <h2 className="mb-2 text-3xl">Pet Clinic</h2>
             <p className="mb-5">Providing the best services for your pets.</p>
-            <button className="btn btn-outline btn-primary">
-              Book an appointment
-            </button>
+            <Link href="/appointments">
+              <button className="btn btn-outline btn-primary">
+                Book an appointment
+              </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -68,7 +70,7 @@ export default function Home() {
               health care, and animal <br />
               observation.
             </p>
-            <Link href={"/appointments"}>
+            <Link href={"/contact-us"}>
               <button
                 className="h-10 px-5 text-white font-bold transition-colors duration-150 bg-[#2a7a9f] 
               rounded-full focus:shadow-outline hover:bg-[#236887] shadow-md"
