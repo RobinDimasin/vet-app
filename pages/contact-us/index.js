@@ -5,7 +5,7 @@ export default function ContactUs() {
         <div class="card card-compact bg-primary shadow-xl rounded-b-none">
           <div class="card-body">
             <div class="flex justify-center">
-              <h2 class="card-title text-base-300">CONTACT US!</h2>
+              <h2 class="card-title text-base-300">HAVE A QUESTION? LET US KNOW!</h2>
               </div>
             </div>
           </div>
@@ -17,21 +17,21 @@ export default function ContactUs() {
           <figure><img src="image/dogvet.jpg" class="max-w-sm mx-5 mt-5 mb-5 rounded-lg shadow-2xl h-[400px]" alt="dog"></img></figure>
           <div class="card-body">
 
-            <h2 class="card-title text-base-300 justify-center">HAVE A QUESTION? LET US KNOW!</h2>
-            
+            <h2 class="card-title text-base-300 justify-center tracking-widest text-2xl font-bold">CONTACT US!</h2>
+            <p class="text-center text-base-300">+63 966 307 6593 | vetreatment@gmail.com</p>
             <div class="flex space-x-14">
-            <div class="form-control w-full max-w-xs">
+            <div class="form-control w-full">
                 <label class="label">
                   <span class="label-text text-base-300">Name</span>
                 </label>
-                <input type="text" placeholder="Type here" class="input input-bordered input-primary input-md w-full max-w-xs" />
+                <input type="text" placeholder="Type here" class="input input-bordered input-primary input-md w-full" />
               </div>
 
-            <div class="form-control w-full max-w-xs">
+            <div class="form-control w-full">
                 <label class="label">
                   <span class="label-text text-base-300">Email Address</span>
                 </label>
-                <input type="text" placeholder="Type here" class="input input-bordered input-primary input-md w-full max-w-xs" />
+                <input type="text" placeholder="Type here" class="input input-bordered input-primary input-md w-full" />
               </div>
             </div>
 
