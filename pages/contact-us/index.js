@@ -11,6 +11,7 @@ export default function ContactUs() {
           </div>
         </div>
 
+
         <div className="px-[10%] space-y-4 mt-5">
         <div class="card lg:card-side shadow-xl bg-gradient-to-r from-cyan-500 to-blue-500">
           <figure><img src="image/dogvet.jpg" class="max-w-sm mx-5 mt-5 mb-5 rounded-lg shadow-2xl h-[400px]" alt="dog"></img></figure>
