@@ -339,7 +339,7 @@ export default function Reviews() {
           <div className="card-body items-center text-center">
             <p>
               {" "}
-              The online appointment is so convenient. Didn't wait in long
+              The online appointment is so convenient. Didn&apos;t wait in long
               queue.
             </p>
           </div>
