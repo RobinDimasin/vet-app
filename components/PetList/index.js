@@ -3,7 +3,7 @@ import EditIcon from "@components/icons/EditIcon";
 import Icon from "@components/icons/Icon";
 import Masonry from "@components/Masonry";
 import FormModal from "@components/Modal/FormModal";
-import EditPetForm from "@components/PetForm/EditPetForm";
+import EditPetForm from "@components/Form/PetForm/EditPetForm";
 import { useState } from "react";
 import { makeApiPostRequest, makeProperty } from "utility";
 

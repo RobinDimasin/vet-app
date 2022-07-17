@@ -1,4 +1,4 @@
-import LoginForm from "@components/LoginForm";
+import LoginForm from "@components/Form/LoginForm";
 import { useRouter } from "next/router";
 
 export default function LoginPage() {

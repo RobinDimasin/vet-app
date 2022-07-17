@@ -3,7 +3,7 @@ import DeleteIcon from "@components/icons/DeleteIcon";
 import EditIcon from "@components/icons/EditIcon";
 import Icon from "@components/icons/Icon";
 import FormModal from "@components/Modal/FormModal";
-import EditReasonForm from "@components/ReasonForm/EditReasonForm";
+import EditReasonForm from "@components/Form/ReasonForm/EditReasonForm";
 import React, { useEffect, useState } from "react";
 import { makeApiPostRequest, makeProperty } from "utility";
 import Dashboard from "..";

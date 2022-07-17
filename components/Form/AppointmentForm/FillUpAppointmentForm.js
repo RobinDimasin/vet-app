@@ -22,7 +22,7 @@ import CloseIcon from "@components/icons/CloseIcon";
 import { LoadingDial, makeApiPostRequest, makeName } from "utility";
 import useAccount from "@components/hooks/useAccount";
 import FormModal from "@components/Modal/FormModal";
-import NewPetForm from "@components/PetForm/NewPetForm";
+import NewPetForm from "@components/Form/PetForm/NewPetForm";
 import NumberInputField from "@components/Form/Field/NumberInputField";
 import moment from "moment";
 

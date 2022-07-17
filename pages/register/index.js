@@ -1,6 +1,6 @@
-import AdminRegisterForm from "@components/RegisterForm/AdminRegisterForm";
-import OwnerRegisterForm from "@components/RegisterForm/OwnerRegisterForm";
-import VeterinarianRegisterForm from "@components/RegisterForm/VeterinarianRegisterForm";
+import AdminRegisterForm from "@components/Form/RegisterForm/AdminRegisterForm";
+import OwnerRegisterForm from "@components/Form/RegisterForm/OwnerRegisterForm";
+import VeterinarianRegisterForm from "@components/Form/RegisterForm/VeterinarianRegisterForm";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
