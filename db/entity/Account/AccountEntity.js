@@ -18,6 +18,10 @@ class AccountEntity extends Entity {
           type: "VarChar(64)",
           attributes: "NOT NULL",
         },
+        profile_picture_url: {
+          type: "VarChar(512)",
+          attributes: "NULL",
+        },
         salt: {
           type: "VarChar(32)",
           attributes: "NOT NULL",
@@ -56,13 +60,14 @@ class AccountEntity extends Entity {
     this.addFunction("verify", async (token) => await this.verify(token));
   }
 
-  async new({ email, username, hashed_password }) {
+  async new({ email, profile_picture_url, username, hashed_password }) {
     const salt = CryptoJS.lib.WordArray.random(128 / 8).toString();
     hashed_password = CryptoJS.SHA512(hashed_password + salt).toString();
 
     return await super.new({
       email,
       username,
+      profile_picture_url,
       salt,
       hashed_password,
     });
@@ -178,6 +183,7 @@ class AccountEntity extends Entity {
         email: account.email,
         username: account.username,
         account_type: account.account_type,
+        profile_picture_url: account.profile_picture_url,
         ...subtypeDetails,
       };
     } else {

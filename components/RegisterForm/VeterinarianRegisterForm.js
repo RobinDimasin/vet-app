@@ -25,9 +25,13 @@ export default function VeterinarianRegisterForm() {
     });
   });
 
+  const re =
+    /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
   const formik = useFormik({
     initialValues: {
       email: "",
+      profile_picture_url: "",
       username: "",
       license_no: "",
       first_name: "",
@@ -37,6 +41,7 @@ export default function VeterinarianRegisterForm() {
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),
+      profile_picture_url: Yup.string().matches(re, "URL is not valid"),
       username: Yup.string()
         .max(64, "Must be 64 characters or less")
         .required("Required"),
@@ -106,6 +111,10 @@ export default function VeterinarianRegisterForm() {
     >
       <TextInputField id="email" type="email" placeholder="Email Address" />
       <TextInputField id="username" placeholder="Username" />
+      <TextInputField
+        id="profile_picture_url"
+        placeholder="Profile Picture URL"
+      />
       <TextInputField id="license_no" placeholder="License Number" />
       <div className="grid grid-flow-row grid-cols-3 gap-4">
         <div>

@@ -8,6 +8,7 @@ import Pet from "@entity/Pet/PetEntity";
 import Form from "@entity/Form/FormEntity";
 import Reason from "@entity/Reason/ReasonEntity";
 import Appointment from "@entity/Appointment/AppointmentEntity";
+import Review from "./Review/ReviewEntity";
 
 const EntityList = {
   account: Account,
@@ -22,6 +23,8 @@ const EntityList = {
   form: Form,
   reason: Reason,
   appointment: Appointment,
+
+  review: Review,
 };
 
 const initEntities = async () => {

@@ -25,15 +25,20 @@ export default function AdminRegisterForm() {
     });
   });
 
+  const re =
+    /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
   const formik = useFormik({
     initialValues: {
       email: "",
+      profile_picture_url: "",
       username: "",
       password: "",
       rootPassword: "",
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Invalid email address").required("Required"),
+      profile_picture_url: Yup.string().matches(re, "URL is not valid"),
       username: Yup.string()
         .max(64, "Must be 64 characters or less")
         .required("Required"),
@@ -96,6 +101,10 @@ export default function AdminRegisterForm() {
     >
       <TextInputField id="email" type="email" placeholder="Email Address" />
       <TextInputField id="username" placeholder="Username" />
+      <TextInputField
+        id="profile_picture_url"
+        placeholder="Profile Picture URL"
+      />
       <TextInputField id="password" type="password" placeholder="Password" />
       <TextInputField
         id="rootPassword"

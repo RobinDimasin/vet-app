@@ -30,6 +30,7 @@ class VeterinarianEntity extends Entity {
   async new({
     email,
     username,
+    profile_picture_url,
     salt,
     hashed_password,
 
@@ -41,6 +42,7 @@ class VeterinarianEntity extends Entity {
     const account = await this.parent.new({
       email,
       username,
+      profile_picture_url,
       salt,
       hashed_password,
     });

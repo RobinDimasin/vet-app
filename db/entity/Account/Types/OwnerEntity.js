@@ -34,6 +34,7 @@ class OwnerEntity extends Entity {
   async new({
     email,
     username,
+    profile_picture_url,
     salt,
     hashed_password,
 
@@ -46,6 +47,7 @@ class OwnerEntity extends Entity {
     const account = await this.parent.new({
       email,
       username,
+      profile_picture_url,
       salt,
       hashed_password,
     });

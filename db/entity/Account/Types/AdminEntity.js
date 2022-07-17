@@ -17,7 +17,14 @@ class AdminEntity extends Entity {
     this.addFunction("getAdmin", async (id) => await this.getAdmin(id));
   }
 
-  async new({ email, username, salt, hashed_password, rootPassword }) {
+  async new({
+    email,
+    profile_picture_url,
+    username,
+    salt,
+    hashed_password,
+    rootPassword,
+  }) {
     if (
       rootPassword !== process.env.ROOT_PASSWORD &&
       process.env.ROOT_PASSWORD
@@ -31,6 +38,7 @@ class AdminEntity extends Entity {
     const account = await this.parent.new({
       email,
       username,
+      profile_picture_url,
       salt,
       hashed_password,
     });

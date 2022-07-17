@@ -19,6 +19,13 @@ export default function Dashboard({
   newRecordButtonLabel = null,
   noRecordLabel = "No records found",
   categories = { data: (d) => d },
+  breaks = [
+    ["default", 1],
+    ["sm", 2],
+    ["lg", 3],
+    ["xl", 4],
+  ],
+  footer,
 }) {
   const queryClient = useQueryClient();
 
@@ -118,6 +125,7 @@ export default function Dashboard({
             </div>
           </div>
         ) : null}
+        {footer}
       </div>
       {isDataLoading ? (
         <>
@@ -129,7 +137,7 @@ export default function Dashboard({
             <div className="flex sm:flex lg:flex xl:flex"></div>
             <div className="hidden sm:hidden lg:hidden xl:hidden"></div>
           </div>
-          <Masonry>
+          <Masonry breaks={breaks}>
             {selectedData.map((d, index) => (
               <div
                 className="break-inside card card-compact bg-base-100 shadow-xl"
