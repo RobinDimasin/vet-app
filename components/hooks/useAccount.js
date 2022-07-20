@@ -20,31 +20,30 @@ export default function useAccount({ type } = {}) {
       router.push(`/login?type=${type}&destination=${destination}`);
     };
 
-    // setLoading(true);
+    setLoading(true);
 
-    // makeApiPostRequest("/api/account/getAccountDetails")
-    //   .then((response) => {
-    //     if (
-    //       response.status === 200 &&
-    //       response.data.status === "OK" &&
-    //       (!type || response.data.data.account_type === type)
-    //     ) {
-    //       setAccount(response.data.data);
-    //     } else {
-    //       if (type) {
-    //         redirectToLogin();
-    //       }
-    //     }
-    //   })
-    //   .catch((e) => {
-    //     if (type) {
-    //       redirectToLogin();
-    //     }
-    //   })
-    //   .finally(() => {
-    //     setLoading(false);
-    //   });
-    setLoading(false);
+    makeApiPostRequest("/api/account/getAccountDetails")
+      .then((response) => {
+        if (
+          response.status === 200 &&
+          response.data.status === "OK" &&
+          (!type || response.data.data.account_type === type)
+        ) {
+          setAccount(response.data.data);
+        } else {
+          if (type) {
+            redirectToLogin();
+          }
+        }
+      })
+      .catch((e) => {
+        if (type) {
+          redirectToLogin();
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [type, setAccount, destination, router]);
 
   return { account, logout, loading };
