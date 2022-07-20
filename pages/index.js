@@ -1,5 +1,6 @@
 import Footer from "@components/Footer/Footer";
 import NavigationBar from "@components/NavigationBar/NavigationBar";
+import Statistics from "@components/Statistics";
 import Link from "next/link";
 
 const Rating = () => {
@@ -189,6 +190,13 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div className="hero h-auto pb-7">
+        <div className="hero-content text-center">
+          <div>
+            <Statistics />
           </div>
         </div>
       </div>
