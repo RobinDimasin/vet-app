@@ -38,8 +38,8 @@ export default function Dashboard({
   );
 
   const { data: rawData = [], isLoading: isDataLoading } = useQuery(
-    account && id,
-    async () => await getData(account)
+    (account || !accountType) && id,
+    async () => await getData(account ?? {})
   );
 
   const selectedCategoryFunction = useMemo(() => {
@@ -62,7 +62,7 @@ export default function Dashboard({
     }
   }, [rawData, selectedCategoryFunction]);
 
-  return !isAccountLoading ? (
+  return !isAccountLoading || !accountType ? (
     <div className="px-[10%] space-y-4">
       <div>
         <div

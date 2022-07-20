@@ -103,12 +103,12 @@ export default function ReviewDashboard({ accountType, ...props }) {
     <Dashboard
       id="reviews"
       name="Reviews"
-      accountType="owner"
+      accountType={null}
       dataComponent={<ReviewInfo />}
       newRecordForm={<NewReviewForm />}
       newRecordButtonLabel="Create Review"
       noRecordLabel="No reviews found"
-      getData={async ({ id }) => {
+      getData={async () => {
         const response = await makeApiPostRequest("/api/review/getAll");
 
         if (response.status === 200 && response.data.status === "OK") {
