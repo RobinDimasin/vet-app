@@ -17,7 +17,7 @@ const conn = mysql.createConnection({
 
 const queryAsync = util.promisify(conn.query).bind(conn);
 
-console.log(process.env.MYSQL_HOST);
+// console.log(process.env.MYSQL_HOST);
 
 export const executeQuery = async ({ query, values = [] }) => {
   try {
@@ -36,10 +36,10 @@ export const executeQuery = async ({ query, values = [] }) => {
       }
     });
 
-    // if (q.includes("CHECK") || true) {
-    //   console.log(q);
-    //   console.log();
-    // }
+    if (!q.includes("ALTER") && !q.includes("CREATE")) {
+      console.log(q);
+      console.log();
+    }
 
     const data = await queryAsync(query, values);
     return {

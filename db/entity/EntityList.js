@@ -31,7 +31,7 @@ const initEntities = async () => {
   const dependencyList = generateDependencyList();
 
   for (const entity of dependencyList) {
-    console.log(entity.name);
+    // console.log(entity.name);
     await entity.init();
   }
 
