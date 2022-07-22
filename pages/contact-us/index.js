@@ -61,7 +61,7 @@ export default function ContactUs() {
               </label>
               <textarea
                 className="textarea textarea-primary textarea-bordered h-24"
-                placeholder="Bio"
+                placeholder="Message"
               ></textarea>
             </div>
 
