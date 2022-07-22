@@ -232,17 +232,6 @@ export default function EditAppointmentForm({
           <span className="label-text text-xs text-error">
             {formik.errors.pets === "string" ? formik.errors.pets : null}
           </span>
-          <FormModal
-            trigger={
-              <span className="label-text-alt link link-primary text-start text-xs">
-                Create new pet profile
-              </span>
-            }
-            form={<NewPetForm />}
-            onSuccess={() => {
-              queryClient.invalidateQueries("get_pets");
-            }}
-          />
         </label>
       </Form>
     </FormikProvider>
